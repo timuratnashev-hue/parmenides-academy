@@ -1,0 +1,84 @@
+---
+// Страница одного узла карты филиаций: /map/<slug>
+import Base from '../../layouts/Base.astro';
+import { parmenidesMap } from '../../data/parmenidesMap';
+import { quotes } from '../../data/quotes';
+import { slugify } from '../../lib/slug';
+
+export async function getStaticPaths() {
+  const out: any[] = [];
+  parmenidesMap.branches.forEach((b) => b.nodes.forEach((n, i) => {
+    out.push({ params: { slug: slugify(n.n) }, props: { node: n, branch: b, prev: b.nodes[i - 1] ?? null, next: b.nodes[i + 1] ?? null } });
+  }));
+  return out;
+}
+const { node, branch, prev, next } = Astro.props;
+const q = quotes[node.n];
+const LABEL = { D: 'работает с текстом диалога', M: 'через посредника' } as const;
+const slug = slugify(node.n);
+const url = `https://parmenides.academy/map/${slug}`;
+const title = `${node.n} и «Парменид» Платона: филиация, учение, источники`;
+const desc = (node.d ? `${node.n} (${node.y}). ${node.d}` : `${node.n} (${node.y}). ${node.f}`).slice(0, 158);
+const Links = ({ items }: { items: { t: string; u: string }[] }) => null;
+---
+<Base title={title} description={desc} path={`/map/${slug}`} type="article"
+  jsonld={[
+    { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Карта филиаций', item: 'https://parmenides.academy/map' },
+      { '@type': 'ListItem', position: 2, name: branch.name, item: 'https://parmenides.academy/map#' + branch.id },
+      { '@type': 'ListItem', position: 3, name: node.n, item: url } ] },
+    { '@context': 'https://schema.org', '@type': 'ScholarlyArticle', headline: title, description: desc, url, inLanguage: 'ru', isPartOf: { '@type': 'Dataset', name: 'Карта филиаций «Парменида» Платона', url: 'https://parmenides.academy/map' }, about: { '@type': 'Person', name: node.n }, author: { '@type': 'Person', name: 'Тимур Атнашев' }, license: 'https://creativecommons.org/licenses/by/4.0/', citation: [...node.l, ...node.w].filter((x) => x.u).map((x) => x.u) },
+  ]}>
+  <nav class="crumbs"><a href="/map">Карта филиаций</a> · <a href={'/map#' + branch.id}>{branch.name}</a></nav>
+  <span class="kick">{LABEL[node.b]}</span>
+  <h1>{node.n}</h1>
+  <p class="sub">{node.y}</p>
+
+  {q && (
+    <figure class="quote">
+      <span class="num">{q.locus}</span>
+      {q.original && <p class:list={['orig', q.lang]} lang={q.lang}>{q.original}</p>}
+      <p class="tr-text">{q.translation}</p>
+      <figcaption>
+        <span class="cap">{q.translator || 'перевод мой'}</span>
+        {q.confidence !== 'high' && <span class="cap warn"> · {q.original ? 'дословность оригинала требует сверки' : 'парафраз; оригинал приводится после сверки'}</span>}
+      </figcaption>
+      {q.note && <p class="qnote">{q.note}</p>}
+    </figure>
+  )}
+
+  <h2>Филиация — через кого получил</h2>
+  <p>{node.f}</p>
+  {node.d && <><h2>Учение</h2><p>{node.d}</p></>}
+
+  <h2>Источники</h2>
+  <ul class="src">{node.l.map((it) => <li>{it.u ? <a href={it.u} target="_blank" rel="noopener">{it.t}</a> : <span class="mut">{it.t} <em>— в открытом доступе не найдено</em></span>}</li>)}</ul>
+  {q && q.extra_sources && q.extra_sources.length > 0 && <ul class="src">{q.extra_sources.map((it) => <li><a href={it.u} target="_blank" rel="noopener">{it.t}</a></li>)}</ul>}
+  <h2>Академические работы о связи с «Парменидом»</h2>
+  <ul class="src">{node.w.map((it) => <li>{it.u ? <a href={it.u} target="_blank" rel="noopener">{it.t}</a> : <span class="mut">{it.t} <em>— в открытом доступе не найдено</em></span>}</li>)}</ul>
+
+  <span class="orn">❈</span>
+  <p class="mut"><span class="cap">ветвь «{branch.name}»</span><br />{branch.note}</p>
+  <p class="pn">
+    {prev && <a href={'/map/' + slugify(prev.n)}>← {prev.n}</a>}
+    {next && <a href={'/map/' + slugify(next.n)}>{next.n} →</a>}
+  </p>
+  <p class="mut"><span class="cap">как цитировать</span><br />Атнашев Т. {node.n} // Карта филиаций «Парменида» Платона. Parmenides Academy, 2026. URL: {url}</p>
+</Base>
+
+<style>
+  .crumbs { font-variant: small-caps; letter-spacing: .12em; font-size: .85rem; color: var(--soft); margin-bottom: 18px; }
+  .crumbs a { text-decoration: none; }
+  .quote { margin: 2em 0 2.4em; padding: 8px 0 0; }
+  .quote .num { margin: 0 0 1em; }
+  .orig { font-size: 1.15rem; line-height: 1.5; text-align: center; max-width: 60ch; margin: 0 auto .8em; }
+  .orig.grc, .orig.la { font-style: normal; }
+  .orig.ar { direction: rtl; font-size: 1.35rem; }
+  .tr-text { font-style: italic; text-align: center; max-width: 60ch; margin: 0 auto .5em; border-left: 0; }
+  .quote figcaption { text-align: center; }
+  .warn { color: var(--amber); }
+  .qnote { text-align: center; color: var(--soft); font-size: .95rem; max-width: 60ch; margin: .8em auto 0; }
+  .src { padding-left: 20px; max-width: 84ch; } .src li { margin-bottom: 4px; font-size: .95rem; }
+  .pn { display: flex; justify-content: space-between; gap: 20px; font-family: var(--display); margin: 1.6em 0; }
+  .pn a { text-decoration: none; }
+</style>

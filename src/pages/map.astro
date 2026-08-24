@@ -1,0 +1,153 @@
+---
+import Base from '../layouts/Base.astro';
+import { parmenidesMap } from '../data/parmenidesMap';
+import { slugify } from '../lib/slug';
+
+const { root, branches } = parmenidesMap;
+const all = branches.flatMap((b) => b.nodes);
+const counts = { total: all.length, d: all.filter((n) => n.b === 'D').length, m: all.filter((n) => n.b === 'M').length };
+const LABEL = { D: 'работает с текстом диалога', M: 'через посредника' };
+const slug = slugify;
+---
+<Base
+  title="Карта филиаций «Парменида» Платона: 45 авторов от Спевсиппа до Франка"
+  description={`${counts.total} мыслителей в ${branches.length} ветвях, у каждого — канал передачи, изложение учения с соответствием гипотезам диалога, источники и академические работы. Неоплатоники, каппадокийцы, Кузанский, Каббала, Гегель, Хайдеггер, Бадью, Делёз.`}
+  path="/map"
+  wide
+  jsonld={{ '@context': 'https://schema.org', '@type': 'Dataset', name: 'Карта филиаций «Парменида» Платона', description: `${counts.total} мыслителей в ${branches.length} ветвях с каналом передачи, учением, источниками и академическими работами.`, creator: { '@type': 'Person', name: 'Тимур Атнашев' }, license: 'https://creativecommons.org/licenses/by/4.0/', inLanguage: 'ru', url: 'https://parmenides.academy/map' }}
+>
+  <header class="mhead">
+    <span class="kick">Карта филиаций</span>
+    <h1>{root.title}</h1>
+    <p class="sub">{root.sub}</p>
+    <p class="rootlinks">{root.links.map((l) => <a href={l.u} target="_blank" rel="noopener">{l.t}</a>)}</p>
+    <p class="intro">{counts.total} узлов в {branches.length} ветвях. У каждого — канал передачи (через кого и через какой конкретный текст), краткое изложение самого учения с соответствием гипотезам, ссылки на источники и академические работы, исследующие связь. В карте оставлены только те, у кого связь с диалогом прослеживается: {counts.d} автора работают с текстом сами, ещё {counts.m} получают его через названного посредника — чаще всего через Прокла, «Книгу о причинах» или Гегеля. Опосредованная филиация через неоплатонизм засчитывается как настоящая: канал в ней назван поимённо.</p>
+    <p class="intro">Спорные места оставлены спорными, а не сглажены. Атрибуция анонимного комментария Порфирию, метафизическое чтение Спевсиппа, «онтологическая революция» каппадокийцев у Зизиуласа, параллель «Эйн-Соф ↔ первая гипотеза» — всё это помечено как предмет спора с указанием обеих сторон.</p>
+    <p class="legend">
+      <span><i class="dot D"></i><b>работает с текстом диалога</b> — есть место, где автор разбирает «Парменид»</span>
+      <span><i class="dot M"></i><b>через посредника</b> — канал установлен и назван</span>
+    </p>
+    <p class="tree"><a href="/img/parmenides_tree.svg" target="_blank">Дерево филиаций — радиальная схема (SVG)</a></p>
+  </header>
+
+  <div class="controls" id="controls">
+    <button data-f="all" class="on">Все {counts.total}</button>
+    <button data-f="D">С текстом ({counts.d})</button>
+    <button data-f="M">Через посредника ({counts.m})</button>
+    <button data-f="toggle">Раскрыть всё</button>
+    <input type="search" id="q" placeholder="поиск по именам, филиациям, учениям…" />
+  </div>
+
+  <nav class="toc">{branches.map((b) => <a href={'#' + b.id}>{b.name}</a>)}</nav>
+
+  {branches.map((b) => (
+    <section class="branch" id={b.id}>
+      <h2>{b.name} <span class="count">{b.nodes.length}</span></h2>
+      <p class="note">{b.note}</p>
+      {b.nodes.map((n) => (
+        <details class="node" data-b={n.b} id={slug(n.n)}>
+          <summary>
+            <i class:list={['dot', n.b]} title={LABEL[n.b]}></i>
+            <span class="name">{n.n}</span>
+            <span class="years">{n.y}</span>
+          </summary>
+          <div class="body">
+            <span class:list={['chip', n.b]}>{LABEL[n.b]}</span>
+            <h4>Филиация — через кого получил</h4>
+            <p>{n.f}</p>
+            {n.d && <><h4>Учение</h4><p>{n.d}</p></>}
+            <h4>Источники</h4>
+            <ul>{n.l.map((it) => <li>{it.u ? <a href={it.u} target="_blank" rel="noopener">{it.t}</a> : <span class="mut">{it.t} <em>— в открытом доступе не найдено</em></span>}</li>)}</ul>
+            <p class="perma"><a href={'/map/' + slug(n.n)}>Отдельная страница: {n.n} — цитата, источники, соседи по ветви →</a></p>
+            <h4>Академические работы о связи с «Парменидом»</h4>
+            <ul>{n.w.map((it) => <li>{it.u ? <a href={it.u} target="_blank" rel="noopener">{it.t}</a> : <span class="mut">{it.t} <em>— в открытом доступе не найдено</em></span>}</li>)}</ul>
+          </div>
+        </details>
+      ))}
+    </section>
+  ))}
+
+  <footer class="mfoot">
+    Составлено для курса «Метод Платона: „Парменид“ как полигон мышления». Ведёт Тимур Атнашев, PhD · Telegram @timuratnashev<br />
+    Опорные своды по рецепции: Turner &amp; Corrigan (eds.), <i>Plato's Parmenides and Its Heritage</i>, 2 vols., SBL 2010; Klibansky, <i>Plato's Parmenides in the Middle Ages and the Renaissance</i>, 1943; Gadamer, <i>Plato's Parmenides and Its Influence</i>, Dionysius 7, 1983.
+  </footer>
+</Base>
+
+<script>
+  const btns = [...document.querySelectorAll('#controls button')] as HTMLButtonElement[];
+  const nodes = [...document.querySelectorAll('details.node')] as HTMLDetailsElement[];
+  const secs = [...document.querySelectorAll('section.branch')] as HTMLElement[];
+  const q = document.getElementById('q') as HTMLInputElement;
+  let filter = 'all';
+  function apply() {
+    const s = q.value.trim().toLowerCase();
+    nodes.forEach((n) => {
+      const okF = filter === 'all' || n.dataset.b === filter;
+      const okQ = !s || (n.textContent || '').toLowerCase().includes(s);
+      n.classList.toggle('hide', !(okF && okQ));
+    });
+    secs.forEach((sec) => sec.classList.toggle('hide', !sec.querySelector('details.node:not(.hide)')));
+  }
+  btns.forEach((b) =>
+    b.addEventListener('click', () => {
+      const f = b.dataset.f!;
+      if (f === 'toggle') {
+        const vis = nodes.filter((n) => !n.classList.contains('hide'));
+        const allOpen = vis.every((n) => n.open);
+        vis.forEach((n) => (n.open = !allOpen));
+        b.textContent = allOpen ? 'Раскрыть всё' : 'Свернуть всё';
+        return;
+      }
+      filter = f;
+      btns.forEach((x) => x.dataset.f !== 'toggle' && x.classList.toggle('on', x === b));
+      apply();
+    })
+  );
+  q.addEventListener('input', apply);
+  // открыть узел по якорю #имя
+  if (location.hash) { const el = document.getElementById(decodeURIComponent(location.hash.slice(1))); if (el && el.tagName === 'DETAILS') (el as HTMLDetailsElement).open = true; }
+</script>
+
+<style>
+  .mhead { border-bottom: 2px solid var(--ink); padding-bottom: 20px; margin-bottom: 10px; }
+  .rootlinks { font-family: var(--serif); font-size: 13px; line-height: 2; }
+  .rootlinks a { margin-right: 16px; text-decoration: none; border-bottom: 1px solid var(--line); }
+  .intro { font-size: .96rem; color: #2b3038; max-width: 76ch; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 24px; font-family: var(--serif); font-size: 13px; }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .tree { font-family: var(--serif); font-size: 13px; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot.D { background: var(--green); } .dot.M { background: var(--amber); }
+  .controls { position: sticky; top: 0; z-index: 5; background: var(--paper); padding: 14px 0 12px; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .controls button { font-family: var(--serif); font-variant: small-caps; letter-spacing: .12em; font-size: .85rem; padding: 5px 14px; border: 1px solid var(--line); background: var(--paper-2); border-radius: 3px 3px 0 0; cursor: pointer; color: var(--soft); }
+  .controls button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .controls input { flex: 1; min-width: 200px; border: 0; border-bottom: 1px solid var(--line); background: transparent; padding: 6px 4px; font: 1rem var(--serif); font-style: italic; outline: none; }
+  .controls input:focus { border-color: var(--mut); }
+  .toc { font-family: var(--serif); font-size: 12.5px; margin: 18px 0 30px; line-height: 2.1; }
+  .toc a { color: var(--mut); text-decoration: none; border-bottom: 1px solid var(--line); margin-right: 14px; }
+  .toc a:hover { color: var(--gold); }
+  .branch { position: relative; margin-bottom: 36px; border-left: 2px solid var(--line); padding-left: 24px; }
+  .branch::before { content: ''; position: absolute; left: -6px; top: 10px; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); }
+  .branch h2 { margin: 0 0 4px; font-size: 1.35rem; }
+  .count { vertical-align: middle; font-family: var(--serif); font-size: 10.5px; color: var(--mut); border: 1px solid var(--line); border-radius: 99px; padding: 1px 8px; }
+  .note { font-style: italic; color: var(--mut); font-size: .92rem; margin: 0 0 12px; max-width: 74ch; }
+  .node { border-top: 1px solid var(--line); }
+  .node:last-child { border-bottom: 1px solid var(--line); }
+  .node summary { display: flex; align-items: center; gap: 12px; padding: 10px 2px; cursor: pointer; list-style: none; }
+  .node summary::-webkit-details-marker { display: none; }
+  .node summary::after { content: '+'; font-family: var(--serif); color: var(--mut); width: 1em; text-align: center; }
+  .node[open] summary::after { content: '−'; }
+  .name { font-weight: 700; font-size: 1.05rem; }
+  .name:hover { color: var(--gold); }
+  .years { margin-left: auto; font-family: var(--serif); font-size: 11px; color: var(--mut); text-align: right; }
+  .body { padding: 2px 2px 20px 24px; }
+  .body h4 { font-family: var(--serif); font-variant: small-caps; text-transform: lowercase; font-size: .8rem; font-weight: 500; letter-spacing: .22em; color: var(--gold); margin: 16px 0 6px; }
+  .body p { margin: 0; font-size: .96rem; max-width: 80ch; }
+  .body ul { margin: 0; padding-left: 20px; max-width: 84ch; }
+  .body li { font-size: .9rem; margin-bottom: 4px; }
+  .chip { display: inline-block; font-family: var(--serif); font-variant: small-caps; font-size: .75rem; text-transform: lowercase; letter-spacing: .1em; color: #fff; border-radius: 99px; padding: 2px 10px; }
+  .chip.D { background: var(--green); } .chip.M { background: var(--amber); }
+  .hide { display: none; }
+  .perma { margin: 12px 0 0 !important; font-variant: small-caps; letter-spacing: .08em; font-size: .85rem !important; }
+  .mfoot { margin-top: 44px; border-top: 2px solid var(--ink); padding-top: 16px; font-family: var(--serif); font-size: 12.5px; color: var(--mut); line-height: 1.6; }
+</style>

@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import body from '../components/polygons_body.html?raw';
+import css from '../components/polygons_style.css?raw';
+---
+<Base
+  title="Три полигона вне Запада: «Чжуан-цзы», Нагарджуна, Ибн Араби — тексты класса «Парменида»"
+  description="По два места из «Чжуан-цзы», «Муламадхьямакакарики» и «Фусус аль-хикам» — апоретичные тексты, вокруг которых расходятся школы. Оригиналы, авторские переводы, ключевые слова и точки расхождения. Материал к карте филиаций «Парменида»."
+  path="/polygons"
+  wide
+>
+  <style set:html={css}></style>
+  <div class="poly" set:html={body}></div>
+</Base>
+<style is:global>
+  .poly .pwrap { padding: 0; max-width: none; }
+  .poly header.top { padding-top: 0; }
+</style>

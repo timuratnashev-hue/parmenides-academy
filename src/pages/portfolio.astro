@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import { TELEGRAM } from '../i18n';
+const same = [TELEGRAM, 'https://nlobooks.ru/nlomedia/catalog/umnye-knigi/', 'https://www.metagames.academy/'];
+---
+<Base
+  title="Тимур Атнашев — философ, переводчик, историк идей: НЛО, «Умные книги», MetaGames Lab"
+  description="Тимур Атнашев, PhD: экс-профессор Шанинки и РАНХиГС, fellow TU Dresden, Toulouse, ULB; соредактор серии «Интеллектуальная история» (НЛО), соведущий подкаста «Умные книги», сооснователь MetaGames Lab. С 2023 года ведёт семинар по «Пармениду» Платона."
+  path="/portfolio"
+  jsonld={{ '@context': 'https://schema.org', '@type': 'Person', name: 'Тимур Атнашев', alternateName: 'Timur Atnashev', jobTitle: 'PhD, философ, переводчик, специалист по интеллектуальной истории', url: 'https://parmenides.academy/portfolio', sameAs: same, affiliation: [{ '@type': 'Organization', name: 'Новое литературное обозрение' }, { '@type': 'Organization', name: 'MetaGames Lab', url: 'https://www.metagames.academy/' }], alumniOf: [{ '@type': 'CollegeOrUniversity', name: 'TU Dresden' }, { '@type': 'CollegeOrUniversity', name: 'Université de Toulouse' }, { '@type': 'CollegeOrUniversity', name: 'Université libre de Bruxelles' }] }}
+>
+  <span class="kick">Ведущий семинара</span>
+  <h1>Тимур Атнашев</h1>
+  <p class="sub">PhD · философ, переводчик, специалист по интеллектуальной истории</p>
+  <p>Экс-профессор Шанинки и РАНХиГС; fellow TU Dresden, Université de Toulouse, Université libre de Bruxelles.</p>
+  <p>Автор и редактор книг по интеллектуальной истории, соредактор одноимённой <a href="https://www.nlobooks.ru/books/intellektualnaya_istoriya/" target="_blank" rel="noopener">серии издательства «Новое литературное обозрение»</a>, соведущий подкаста <a href="https://nlobooks.ru/nlomedia/catalog/umnye-knigi/" target="_blank" rel="noopener">«Умные книги»</a>.</p>
+  <p>Сооснователь компании <a href="https://www.metagames.academy/" target="_blank" rel="noopener">MetaGames Lab</a>.</p>
+  <p>С 2023 года постоянно ведёт дружеский диалектический семинар по диалогу Платона «Парменид».</p>
+  <span class="orn">❈</span>
+  <h2>Работы на этом сайте</h2>
+  <p><a href="/map">Карта филиаций «Парменида»</a> · <a href="/polygons">Три полигона вне Запада</a> · <a href="/exercises">Упражнения интеллектуального зала</a></p>
+  <h2>Книги и статьи</h2>
+  <p class="mut"><em>Список публикаций — в подготовке.</em></p>
+</Base>

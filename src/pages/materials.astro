@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const SECTION: Record<string, [string, string]> = { exercises: ['упражнение', ''], translations: ['перевод', 'gold'], commentary: ['комментарий', 'amber'], infographics: ['инфографика', ''], qa: ['вопросы и ответы', 'gold'], notes: ['заметка', 'amber'] };
+const posts = (await getCollection('articles', (a) => a.data.lang === 'ru' && !a.data.draft)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fixed = [
+  { href: '/map', t: 'Карта филиаций «Парменида»', ann: 'Сорок пять авторов в одиннадцати ветвях: канал передачи, учение с соответствием гипотезам, источники и академические работы по каждому.', tag: 'инфографика', c: '', meta: 'Спевсипп — Франк · 2026' },
+  { href: '/polygons', t: 'Три полигона вне Запада', ann: '«Чжуан-цзы», «Муламадхьямакакарика», «Фусус аль-хикам» — по два места из каждого, вокруг которых расходятся школы. Оригиналы и авторские переводы.', tag: 'перевод', c: 'gold', meta: 'китайский · санскрит · арабский · 2026' },
+  { href: '/exercises', t: 'Упражнения интеллектуального зала', ann: 'Раздатки к встречам: Анаксимандр; Пифагор и Гераклит; Парменид «О природе» — греческий текст, подстрочник и два перевода.', tag: 'упражнение', c: '', meta: 'I–III · 2026' },
+];
+---
+<Base
+  title="Материалы академии: карта филиаций, переводы, комментарии, упражнения"
+  description="Открытая библиотека Parmenides Academy: уникальные материалы для тех, кто понимает — карта филиаций «Парменида» с источниками, авторские переводы полигонов вне Запада, раздатки-упражнения по первым греческим философам."
+  path="/materials"
+>
+  <span class="kick">Библиотека</span>
+  <h1>Материалы</h1>
+  <p class="sub">Уникальный набор материалов — для тех, кто готов работать и способен понимать. Всё открыто: читать, цитировать, распространять со ссылкой.</p>
+  <p>На сайт попадает только то, у чего есть признак уникальности: собственный перевод, собственная сводка источников, собственная типология. Пересказов здесь нет.</p>
+  <span class="orn">❈</span>
+  {fixed.map((f) => (
+    <article class="card">
+      <span class:list={['bookmark', f.c]}>{f.tag}</span>
+      <h3><a href={f.href}>{f.t}</a></h3>
+      <p class="ann">{f.ann}</p>
+      <span class="meta">{f.meta}</span>
+    </article>
+  ))}
+  {posts.map((p) => (
+    <article class="card">
+      <span class:list={['bookmark', SECTION[p.data.section][1]]}>{SECTION[p.data.section][0]}</span>
+      <h3><a href={'/' + p.id.replace(/^ru\//, '')}>{p.data.title}</a></h3>
+      <p class="ann">{p.data.description}</p>
+      <span class="meta">{p.data.date.toLocaleDateString('ru-RU', { year: 'numeric', month: 'long' })}</span>
+    </article>
+  ))}
+</Base>

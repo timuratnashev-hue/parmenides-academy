@@ -1,0 +1,21 @@
+---
+// Динамические страницы из markdown: src/content/articles/ru/<slug>.md → /<slug>
+import Base from '../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths() {
+  const posts = await getCollection('articles', (a) => a.data.lang === 'ru' && !a.data.draft);
+  return posts.map((p) => ({ params: { slug: p.id.replace(/^ru\//, '') }, props: { post: p } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+<Base title={post.data.title + ' — Parmenides Academy'} description={post.data.description} path={'/' + post.id.replace(/^ru\//, '')} type="article" jsonld={{ '@context': 'https://schema.org', '@type': 'Article', headline: post.data.title, description: post.data.description, datePublished: post.data.date.toISOString(), inLanguage: post.data.lang, author: { '@type': 'Person', name: 'Тимур Атнашев' } }}>
+  <article class="prose">
+    <span class="kick">{post.data.section} · {post.data.date.toLocaleDateString('ru-RU', { year: 'numeric', month: 'long' })}</span>
+    <h1>{post.data.title}</h1>
+    <p class="sub">{post.data.description}</p>
+    <Content />
+    <span class="orn">❈</span>
+    <p class="mut"><span class="cap">как цитировать</span><br />Атнашев Т. {post.data.title} // Parmenides Academy, {post.data.date.getFullYear()}. URL: https://parmenides.academy/{post.id.replace(/^ru\//, '')}</p>
+  </article>
+</Base>

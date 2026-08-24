@@ -1,0 +1,227 @@
+---
+import { ui, prefix, TELEGRAM, type Lang } from '../i18n';
+interface Props {
+  title: string;
+  description: string;
+  lang?: Lang;
+  path?: string;
+  wide?: boolean;
+  /** JSON-LD объект(ы) для страницы */
+  jsonld?: object | object[];
+  /** тип страницы для og:type */
+  type?: 'website' | 'article';
+  /** есть ли реальный перевод: если нет — hreflang не объявляем */
+  translated?: boolean;
+}
+const { title, description, lang = 'ru', path = '/', wide = false, jsonld, type = 'website', translated = false } = Astro.props;
+const t = ui[lang];
+const p = prefix(lang);
+const canonical = new URL(p + path, Astro.site).href;
+const alts: [Lang, string][] = (['ru', 'en', 'fr'] as Lang[]).map((l) => [l, new URL(prefix(l) + path, Astro.site).href]);
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOrganization',
+  name: 'Parmenides Academy',
+  alternateName: 'Интеллектуальный гимнастический зал',
+  url: Astro.site?.href,
+  founder: { '@type': 'Person', name: 'Тимур Атнашев', sameAs: [TELEGRAM] },
+  sameAs: [TELEGRAM],
+};
+const ld = [org, ...(Array.isArray(jsonld) ? jsonld : jsonld ? [jsonld] : [])];
+const NAV: [string, string][] = [
+  ['/', t.nav_home],
+  ['/materials', t.nav_materials],
+  ['/map', t.nav_map],
+  ['/exercises', t.nav_exercises],
+  ['/portfolio', t.nav_portfolio],
+];
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {translated && alts.map(([l, href]) => <link rel="alternate" hreflang={l} href={href} />)}
+    {translated && <link rel="alternate" hreflang="x-default" href={alts[0][1]} />}
+    <meta property="og:site_name" content="Parmenides Academy" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : lang === 'fr' ? 'fr_FR' : 'en_GB'} />
+    <meta property="og:image" content={new URL('/og.png', Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png?v=3" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </head>
+  <body>
+    <header class="site-head">
+      <div class="wrap">
+        <a class="brand" href={p + '/'}>
+          <span class="brand-name">{t.site}</span>
+          <span class="brand-sub">{t.tagline}</span>
+        </a>
+        <div class="langs">
+          {(['ru', 'en', 'fr'] as Lang[]).map((l) => (
+            <a href={prefix(l) + (translated ? path : '/')} class:list={[{ on: l === lang }]}>{l.toUpperCase()}</a>
+          ))}
+        </div>
+      </div>
+      <nav class="tabs" aria-label="Разделы">
+        <div class="wrap">
+          {NAV.map(([href, label]) => (
+            <a href={p + href} class:list={['tab', { on: isActive(href) }]} aria-current={isActive(href) ? 'page' : undefined}>{label}</a>
+          ))}
+        </div>
+      </nav>
+    </header>
+
+    <main class:list={['wrap', 'page', { wide }]}>
+      <slot />
+    </main>
+
+    <aside class="cta-band">
+      <div class="wrap">
+        <span class="orn">❈</span>
+        <p class="open">{t.open_access}</p>
+        <a class="btn" href={TELEGRAM} target="_blank" rel="noopener">{t.cta}</a>
+        <span class="cta-sub">{t.cta_sub} · @timuratnashev</span>
+      </div>
+    </aside>
+
+    <footer class="site-foot">
+      <div class="wrap">
+        <span class="kick">{t.footer_series}</span>
+        <span class="foot-line">{t.footer}</span>
+        <span class="copy">© {t.copyright} · {new Date().getFullYear()}</span>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --paper: #F7F2E5; --paper-2: #EFE8D6; --ink: #262017; --soft: #5E5446;
+    --gold: #97783C; --gold-2: #C9B27A; --green: #2C4A38; --amber: #A9782B; --line: #D9CFB8;
+    --serif: "EB Garamond", Garamond, "Times New Roman", serif;
+    --display: "Old Standard TT", "EB Garamond", Georgia, serif;
+    --wrap: 900px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 18px/1.55 var(--serif); -webkit-font-smoothing: antialiased; font-feature-settings: "liga", "kern"; }
+  a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--gold-2); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  a:hover { color: var(--gold); text-decoration-color: var(--gold); }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 22px; }
+  .wrap.wide { max-width: 1080px; }
+  .page { min-height: 50vh; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 400; color: var(--ink); }
+  h1 { font-size: 2.3rem; line-height: 1.15; letter-spacing: .01em; margin: 0 0 .35em; }
+  h2 { font-size: 1.45rem; line-height: 1.25; margin: 2.4em 0 .6em; }
+  h3 { font-size: 1.15rem; margin: 1.6em 0 .4em; font-family: var(--serif); font-weight: 600; }
+  p, li { max-width: 68ch; }
+  em, i { font-style: italic; }
+
+  /* служебное — капитель, разрядка, золото */
+  .kick, .cap { font-family: var(--serif); font-variant: small-caps; font-size: .8rem; letter-spacing: .22em; text-transform: lowercase; color: var(--gold); font-weight: 500; }
+  .kick { display: block; margin: 0 0 14px; }
+  .num { display: block; text-align: center; font-variant: small-caps; letter-spacing: .3em; color: var(--gold); font-size: .85rem; margin: 2em 0 1em; }
+  .sub { font-style: italic; color: var(--soft); font-size: 1.15rem; margin: 0 0 1em; }
+  .mut { color: var(--soft); }
+  .orn { display: block; text-align: center; color: var(--gold); font-size: 1.1rem; margin: 2.6em 0 2.2em; letter-spacing: 0; }
+  .greek { color: var(--gold); font-style: normal; }
+
+  .btn { display: inline-block; font-family: var(--serif); font-variant: small-caps; letter-spacing: .14em; font-size: .95rem; font-weight: 500; padding: 9px 22px 10px; background: var(--green); color: var(--paper); border-radius: 2px; text-decoration: none; border: 1px solid var(--green); }
+  .btn:hover { background: #1f3628; color: var(--paper); }
+  .btn.ghost { background: transparent; color: var(--green); border-color: var(--gold-2); }
+  .btn.ghost:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* обложка — двойная золотая рамка */
+  .cover { position: relative; text-align: center; padding: 44px 32px 40px; margin: 8px 0 44px; border: 1px solid var(--gold); outline: 1px solid var(--gold-2); outline-offset: 5px; background: var(--paper); }
+  .cover .kick { margin-bottom: 26px; }
+  .cover h1 { margin: 0 0 .3em; font-size: 2.5rem; }
+  .cover .sub { margin: 0 auto .9em; max-width: 40ch; }
+  .cover .greek { display: block; font-size: 1.1rem; margin: 0 0 1.4em; }
+  .cover .genre { display: block; font-variant: small-caps; letter-spacing: .2em; font-size: .85rem; color: var(--ink); margin: 0 0 1.6em; }
+  .cover .orn { margin: .2em 0 1.2em; }
+  .cover .formula { font-style: italic; color: var(--ink); margin: 0 auto .5em; max-width: 50ch; }
+  .cover .author { font-variant: small-caps; letter-spacing: .22em; font-size: .95rem; display: block; margin: .4em 0 0; }
+  .cover p { max-width: none; }
+  .cover .actions { justify-content: center; margin-top: 1.8em; }
+  .cover .rule { display: block; width: 90px; height: 1px; background: var(--ink); margin: 0 auto 26px; }
+
+  /* закладка */
+  .bookmark { position: absolute; top: -1px; left: 18px; width: 26px; padding: 14px 0 18px; background: var(--green); color: var(--paper); font-variant: small-caps; letter-spacing: .18em; font-size: .7rem; writing-mode: vertical-rl; text-orientation: mixed; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 9px), 0 100%); }
+  .bookmark.gold { background: var(--gold); }
+  .bookmark.amber { background: var(--amber); }
+
+  /* карточка материала */
+  .card { position: relative; background: var(--paper-2); border: 1px solid var(--line); padding: 22px 26px 20px 62px; margin: 0 0 18px; }
+  .card h3 { font-family: var(--display); font-weight: 400; font-size: 1.3rem; margin: 0 0 .25em; }
+  .card h3 a { text-decoration: none; }
+  .card h3 a:hover { color: var(--gold); }
+  .card .ann { font-style: italic; color: var(--soft); margin: 0 0 .5em; }
+  .card .meta { font-variant: small-caps; letter-spacing: .16em; font-size: .78rem; color: var(--gold); }
+  .card .kick { margin-bottom: 6px; }
+
+  /* линейка перевода / цитаты */
+  .tr { border-left: 2px solid var(--gold); padding-left: 18px; margin: 1.6em 0; }
+  .tr .lab { display: block; font-variant: small-caps; letter-spacing: .22em; font-size: .78rem; color: var(--gold); margin-bottom: 4px; }
+  .tr p { margin: 0; }
+  blockquote { border-left: 2px solid var(--gold); padding-left: 18px; margin: 1.6em 0; font-style: italic; }
+  blockquote .who { display: block; font-style: normal; font-variant: small-caps; letter-spacing: .16em; font-size: .8rem; color: var(--gold); margin-top: .4em; }
+
+  /* шапка */
+  .site-head { padding: 22px 0 0; }
+  .site-head .wrap { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+  .brand { text-decoration: none; display: flex; flex-direction: column; }
+  .brand-name { font-family: var(--display); letter-spacing: .3em; text-transform: uppercase; font-size: .82rem; color: var(--ink); }
+  .brand-sub { font-style: italic; color: var(--soft); font-size: .92rem; margin-top: 2px; }
+  .brand:hover .brand-name { color: var(--gold); }
+  .langs { display: flex; gap: 6px; font-variant: small-caps; letter-spacing: .12em; font-size: .78rem; }
+  .langs a { text-decoration: none; color: var(--soft); padding: 1px 7px; border: 1px solid var(--line); border-radius: 2px; }
+  .langs a.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* вкладки картотеки */
+  .tabs { margin-top: 18px; border-bottom: 1px solid var(--gold); background: linear-gradient(to top, var(--paper-2), transparent 70%); }
+  .tabs .wrap { display: flex; gap: 4px; flex-wrap: wrap; align-items: flex-end; justify-content: flex-start; }
+  .tab { display: inline-block; padding: 8px 18px 7px; margin-bottom: -1px; background: var(--paper-2); border: 1px solid var(--line); border-bottom: 1px solid var(--gold); border-radius: 3px 3px 0 0; text-decoration: none; font-variant: small-caps; letter-spacing: .18em; font-size: .85rem; color: var(--soft); }
+  .tab:hover { color: var(--gold); }
+  .tab.on { background: var(--paper); color: var(--ink); border-color: var(--gold); border-bottom-color: var(--paper); border-top: 2px solid var(--gold); padding-top: 9px; }
+  .page { padding-top: 40px; }
+
+  .cta-band { margin-top: 70px; padding: 8px 0 34px; text-align: center; }
+  .cta-band .orn { margin: 0 0 1.4em; }
+  .cta-band .wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .cta-band .open { font-style: italic; color: var(--soft); margin: 0 auto .6em; max-width: 50ch; }
+  .site-foot .copy { font-variant: small-caps; letter-spacing: .12em; font-size: .8rem; color: var(--soft); margin-top: 4px; }
+  .cta-sub { font-variant: small-caps; letter-spacing: .12em; font-size: .82rem; color: var(--soft); }
+  .site-foot { border-top: 1px solid var(--gold-2); padding: 16px 0 50px; text-align: center; }
+  .site-foot .wrap { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+  .site-foot .kick { margin: 0; }
+  .foot-line { font-style: italic; color: var(--soft); font-size: .92rem; }
+
+  .prose hr { border: 0; text-align: center; margin: 2.5em 0; }
+  .prose hr::after { content: '❈'; color: var(--gold); }
+  .prose table { border-collapse: collapse; font-size: .95rem; }
+  .prose td, .prose th { border: 1px solid var(--line); padding: 6px 10px; vertical-align: top; }
+  .prose code { font-size: .9em; background: var(--paper-2); padding: 1px 4px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 1.4em; }
+
+  @media (max-width: 640px) {
+    body { font-size: 17px; }
+    h1, .cover h1 { font-size: 1.9rem; }
+    .cover { padding: 30px 18px; outline-offset: 4px; }
+    .site-head .wrap { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .tab { padding: 7px 12px 6px; font-size: .78rem; letter-spacing: .12em; }
+  }
+</style>

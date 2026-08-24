@@ -1,0 +1,14 @@
+# Parmenides Academy
+> Открытая библиотека и клуб медленного чтения: «Парменид» Платона как полигон западной мысли. Ведёт Тимур Атнашев, PhD. Материалы открыты для чтения и цитирования со ссылкой на источник.
+
+## Главные страницы
+- [Курс и ближайший поток](https://parmenides.academy/)
+- [Карта филиаций «Парменида»: 45 авторов, каналы передачи, источники](https://parmenides.academy/map)
+- Каждому автору — отдельная страница /map/<slug> с цитатой в оригинале и переводе, филиацией, учением и источниками (например https://parmenides.academy/map/plotin, /map/prokl, /map/nikolay-kuzanskiy, /map/gegel, /map/alen-badyu)
+- [Три полигона вне Запада: Чжуан-цзы, Нагарджуна, Ибн Араби — авторские переводы](https://parmenides.academy/polygons)
+- [Упражнения: раздатки по Анаксимандру, Пифагору, Гераклиту, Пармениду](https://parmenides.academy/exercises)
+- [Материалы — библиотека](https://parmenides.academy/materials)
+- [Тимур Атнашев — портфолио](https://parmenides.academy/portfolio)
+
+## Контакт
+- Telegram: https://t.me/timuratnashev

@@ -1,0 +1,96 @@
+---
+import Base from '../../layouts/Base.astro';
+import { TELEGRAM } from '../../i18n';
+import { pages } from '../../data/figures';
+
+export function getStaticPaths() {
+  return pages.map((p) => ({ params: { slug: p.slug }, props: { page: p } }));
+}
+const { page } = Astro.props;
+const idx = pages.findIndex((p) => p.slug === page.slug);
+const prev = pages[idx - 1];
+const next = pages[idx + 1];
+const nums = ['I', 'II', 'III', 'IV', 'V'];
+---
+<Base
+  title={`Фигуры зала ${page.n}. ${page.title}: атлеты на греческих вазах и упражнения мысли`}
+  description={`${page.sub}. ${page.figures.map((f) => f.sport.toLowerCase() + ' — ' + f.title.toLowerCase()).join(', ')}. Изображения — Метрополитен-музей, открытый доступ.`}
+  path={`/figures/${page.slug}`}
+  jsonld={{
+    '@context': 'https://schema.org', '@type': 'Article',
+    headline: `Фигуры зала ${page.n}. ${page.title}`,
+    description: page.sub,
+    author: { '@type': 'Person', name: 'Тимур Атнашев' },
+    publisher: { '@type': 'EducationalOrganization', name: 'Parmenides Academy', url: 'https://parmenides.academy' },
+    inLanguage: 'ru',
+  }}
+>
+  <section class="cover">
+    <span class="rule"></span>
+    <span class="kick">Фигуры зала · {page.n}</span>
+    <h1>{page.title}</h1>
+    <p class="sub">{page.sub}</p>
+    <span class="greek">γυμνάσιον</span>
+    <span class="orn">❈</span>
+    <p class="formula">{page.figures.map((f) => f.sport).join(' · ')}</p>
+    <p class="actions">
+      {pages.map((p) => (
+        <a class:list={['btn', { ghost: p.slug !== page.slug }]} href={`/figures/${p.slug}`}>{p.n}. {p.title}</a>
+      ))}
+    </p>
+  </section>
+
+  <section>
+    <p>{page.intro}</p>
+    <p class="mut">Слово «гимнастический зал» в описании курса — не метафора вежливости. Платон в «Пармениде» называет прохождение гипотез γυμνασία, упражнением (135d), и говорит, что без него истина ускользнёт. Эти страницы — попытка увидеть, какие именно мышцы имеются в виду, глядя на тех, кто тренировал настоящие.</p>
+  </section>
+
+  <section class="figs">
+    {page.figures.map((f, i) => (
+      <article class="fig">
+        <figure>
+          <img src={f.img} alt={f.alt} loading="lazy" />
+          <figcaption>{f.credit}</figcaption>
+        </figure>
+        <div class="txt">
+          <span class="kick">{nums[i]} · {f.sport} · <span lang="grc" class="gr">{f.greek}</span></span>
+          <h2>{f.title}</h2>
+          <p>{f.how}</p>
+          <p><span class="lbl">Тренирует.</span> {f.trains}</p>
+          <p><span class="lbl">У нас.</span> {f.ours}{f.link && <> <a href={f.link[0]}>{f.link[1]}</a>.</>}</p>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="terms">
+    <p class="mut">Все изображения — The Metropolitan Museum of Art, Open Access (CC0). Датировки и атрибуции — по каталогу музея. Пагинация Платона — по Стефану.</p>
+    <p>Участие в семинаре — по рекомендации или после короткого собеседования. Напишите о себе в двух словах — договоримся о встрече.</p>
+    <p class="actions">
+      {prev && <a class="btn ghost" href={`/figures/${prev.slug}`}>← {prev.n}. {prev.title}</a>}
+      {next && <a class="btn ghost" href={`/figures/${next.slug}`}>{next.n}. {next.title} →</a>}
+      <a class="btn" href={TELEGRAM} target="_blank" rel="noopener">Записаться</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .figs { max-width: none; }
+  .fig { display: grid; grid-template-columns: 5fr 6fr; gap: 0 36px; align-items: start; padding: 28px 0; border-top: 1px solid var(--line); }
+  .fig:last-child { border-bottom: 1px solid var(--line); }
+  .fig figure { margin: 0; position: sticky; top: 24px; }
+  .fig img { display: block; width: 100%; height: auto; border: 1px solid var(--gold); outline: 1px solid var(--gold-2); outline-offset: 4px; }
+  .fig figcaption { font-size: .85rem; font-style: italic; margin-top: 12px; color: var(--ink); opacity: .75; }
+  .fig .txt { max-width: 60ch; }
+  .fig .txt .kick { margin: 6px 0 4px; }
+  .fig .txt .gr { text-transform: none; letter-spacing: 0; font-size: .95rem; font-variant: normal; }
+  .fig h2 { margin: 0 0 .5em; }
+  .fig p { margin: 0 0 .8em; font-size: 1rem; }
+  .lbl { font-variant: small-caps; letter-spacing: .12em; color: var(--gold); font-size: .85rem; }
+  .terms { border-top: 1px solid var(--line); padding: 18px 0 22px; margin-top: 2em; }
+  .cover .actions .btn { margin: 4px; }
+  @media (max-width: 720px) {
+    .fig { grid-template-columns: 1fr; gap: 16px 0; }
+    .fig figure { position: static; }
+  }
+</style>

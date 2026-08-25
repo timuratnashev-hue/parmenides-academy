@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { TELEGRAM } from '../i18n';
+import { contours } from '../data/figureContours';
 
 const voices = [
   ['Кирилл Кринкин', 'исследователь ИИ, JetBrains', 'Древний философский метод превратился в алгоритмизируемый инструмент анализа. Особенно ценно практическое применение — протаскивание собственных рабочих понятий через «решётку Парменида». Это как метод главных компонент, только для смыслового пространства.'],
@@ -46,6 +47,19 @@ const voices = [
   <section>
     <p>Частный семинар для взрослых и подростков: первые греческие философы и «Парменид» — медленно, вслух, сверяясь с греческим оригиналом. Восемь встреч, группа 4–8. Участие — по рекомендации или после короткого собеседования: нам важно, чтобы группа была собрана из тех, кто готов работать.</p>
     <p>Западная традиция мысли расходится от одного диалога Платона. За две с половиной тысячи лет через «Парменид» прошли неоплатоники и отцы Церкви, Николай Кузанский и каббалисты, Гегель, Хайдеггер, Бадью. Мы читаем этот текст медленно, вслух, сверяясь с греческим оригиналом, — и восходим к нему через первых греческих философов: Анаксимандра, Пифагора, Гераклита, Парменида.</p>
+  </section>
+
+  <section class="palaestra">
+    <a href="/figures/1" class="pimg"><img src="/img/figures/run.jpg" alt="Бегуны на панафинейской призовой амфоре, ок. 530 до н. э." loading="lazy" width="380" height="380" /></a>
+    <p class="pcap"><span class="cap">бег</span> — первая фигура зала: фраза оригинала, пять минут, собственный перевод. Панафинейская амфора, ок. 530 до н. э. <a href="/format">Как устроена встреча</a></p>
+    <p class="picons">
+      {['run','jump','discus','wrestle','trainer'].map((k) => (
+        <a href="/figures/1" aria-label="Фигуры зала">
+          <svg viewBox={`-3 -3 ${contours[k].w + 6} ${contours[k].h + 6}`} fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" aria-hidden="true">{contours[k].d.map((d) => <path d={d} />)}</svg>
+        </a>
+      ))}
+    </p>
+    <p class="pcap2">Каждое упражнение семинара — фигура античного зала: перевод с листа как бег, гипотеза как прыжок с гальтерами, определение как диск. <a href="/figures/1">Фигуры зала</a></p>
   </section>
 
   <section>
@@ -95,6 +109,16 @@ const voices = [
 </Base>
 
 <style>
+  .palaestra { margin: 2.4em 0 2.2em; text-align: center; }
+  .palaestra .pimg { display: block; text-decoration: none; }
+  .palaestra img { width: 100%; max-width: 380px; height: auto; display: block; margin: 0 auto; border: 1px solid var(--gold); outline: 1px solid var(--gold-2); outline-offset: 4px; }
+  .palaestra .pcap { font-style: italic; color: var(--soft); max-width: 52ch; margin: 16px auto 0; font-size: .95rem; }
+  .palaestra .pcap .cap { font-style: normal; }
+  .palaestra .picons { display: flex; justify-content: center; align-items: flex-end; gap: 26px; margin: 22px auto 6px; color: var(--gold); max-width: none; }
+  .palaestra .picons a { line-height: 0; opacity: .8; text-decoration: none; }
+  .palaestra .picons a:hover { opacity: 1; color: var(--green); }
+  .palaestra .picons svg { height: 44px; width: auto; display: block; }
+  .palaestra .pcap2 { font-size: .95rem; color: var(--soft); max-width: 62ch; margin: 4px auto 0; }
   .treesec { margin: -10px 0 40px; text-align: center; }
   .treesec img { width: 100%; max-width: 860px; height: auto; display: block; margin: 0 auto; }
   .treelink { text-decoration: none; display: block; }

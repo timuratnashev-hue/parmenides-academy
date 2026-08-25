@@ -1,0 +1,152 @@
+---
+// Вертикальная закладка с контурами фигур зала.
+// Клик по контуру открывает большую закладку с изображением вазы и разбором упражнения.
+import { pages } from '../data/figures';
+import { contours } from '../data/figureContours';
+
+const nums = ['I', 'II', 'III', 'IV', 'V'];
+const figs = pages.flatMap((p) =>
+  p.figures.map((f, i) => ({ ...f, pageN: p.n, pageTitle: p.title, pageSlug: p.slug, n: nums[i] }))
+);
+---
+<aside class="figrail" aria-label="Фигуры зала">
+  <span class="rk">фигуры зала</span>
+  <div class="rbody">
+    {figs.map((f, i) => {
+      const c = contours[f.icon];
+      return (
+        <button type="button" class="figbtn" data-fig={i} title={`${f.sport} — ${f.title}`} aria-label={`${f.sport} — ${f.title}`}>
+          <svg viewBox={`-3 -3 ${c.w + 6} ${c.h + 6}`} fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" aria-hidden="true">
+            {c.d.map((d) => <path d={d} />)}
+          </svg>
+        </button>
+      );
+    })}
+  </div>
+</aside>
+
+<dialog class="figdlg" aria-label="Фигура зала">
+  <button type="button" class="figclose" aria-label="Закрыть">✕</button>
+  {figs.map((f, i) => (
+    <article class="figpane" data-pane={i} hidden>
+      <figure>
+        <img src={f.img} alt={f.alt} loading="lazy" />
+        <figcaption>{f.credit}</figcaption>
+      </figure>
+      <div class="txt">
+        <span class="kick">{f.pageN}·{f.n} · {f.sport} · <span lang="grc" class="gr">{f.greek}</span></span>
+        <h2>{f.title}</h2>
+        <p>{f.how}</p>
+        <p><span class="lbl">Тренирует.</span> {f.trains}</p>
+        <p><span class="lbl">У нас.</span> {f.ours}</p>
+        <p class="more"><a href={`/figures/${f.pageSlug}`}>{f.pageN}. {f.pageTitle}</a> — все пять фигур страницы</p>
+      </div>
+    </article>
+  ))}
+  <nav class="fignav">
+    <button type="button" class="fignext" data-step="-1" aria-label="Предыдущая фигура">←</button>
+    <span class="figcount"></span>
+    <button type="button" class="fignext" data-step="1" aria-label="Следующая фигура">→</button>
+  </nav>
+</dialog>
+
+<style>
+  .figrail { --rw: 58px; }
+  .figrail .rk {
+    font-family: var(--serif); font-variant: small-caps; letter-spacing: .22em; font-size: .7rem;
+    color: var(--gold); display: block; text-align: center;
+  }
+  .rbody { display: flex; }
+  .figbtn {
+    border: 0; background: none; padding: 6px 4px; cursor: pointer; color: var(--gold);
+    line-height: 0; opacity: .72; transition: opacity .15s, color .15s, transform .15s;
+  }
+  .figbtn svg { height: 34px; width: auto; display: block; margin: 0 auto; }
+  .figbtn:hover, .figbtn:focus-visible { opacity: 1; color: var(--green); transform: translateY(-1px); }
+  .figbtn[aria-current='true'] { opacity: 1; color: var(--green); }
+
+  /* узкий экран: горизонтальная полоса в потоке страницы */
+  .figrail { margin: 0 0 30px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 8px 0 6px; }
+  .figrail .rk { text-align: left; margin-bottom: 2px; }
+  .rbody { flex-direction: row; gap: 2px; overflow-x: auto; }
+
+  /* широкий экран: закладка-лента слева от колонки текста */
+  @media (min-width: 1180px) {
+    .figrail {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      left: max(10px, calc(50vw - 560px)); width: var(--rw); z-index: 5;
+      margin: 0; padding: 10px 0 12px; border: 0; border-left: 1px solid var(--gold-2); background: transparent;
+    }
+    .figrail .rk { writing-mode: vertical-rl; text-align: center; margin: 0 auto 8px; }
+    .rbody { flex-direction: column; gap: 0; overflow: visible; }
+  }
+  @media (min-width: 1180px) and (max-height: 720px) {
+    .figbtn svg { height: 26px; }
+  }
+
+  .figdlg {
+    border: 1px solid var(--gold); outline: 1px solid var(--gold-2); outline-offset: 5px;
+    background: var(--paper); color: var(--ink); max-width: 880px; width: calc(100vw - 60px);
+    padding: 26px 30px 22px; border-radius: 2px; position: relative; max-height: calc(100vh - 80px); overflow: auto;
+  }
+  .figdlg::backdrop { background: rgba(38, 32, 23, .55); }
+  .figpane[hidden] { display: none; }
+  .figpane { display: grid; grid-template-columns: 5fr 6fr; gap: 0 28px; align-items: start; }
+  .figpane figure { margin: 0; }
+  .figpane img { display: block; width: 100%; height: auto; border: 1px solid var(--gold-2); }
+  .figpane figcaption { font-size: .82rem; font-style: italic; color: var(--soft); margin-top: 10px; }
+  .figpane .txt { max-width: 52ch; }
+  .figpane h2 { margin: .1em 0 .5em; font-size: 1.5rem; }
+  .figpane p { margin: 0 0 .7em; font-size: .98rem; }
+  .figpane .gr { text-transform: none; letter-spacing: 0; font-variant: normal; }
+  .figpane .lbl { font-variant: small-caps; letter-spacing: .12em; color: var(--gold); font-size: .82rem; }
+  .figpane .more { font-size: .9rem; color: var(--soft); }
+  .figclose {
+    position: absolute; top: 6px; right: 10px; border: 0; background: none; cursor: pointer;
+    font-size: 1.1rem; color: var(--gold); line-height: 1; padding: 6px;
+  }
+  .figclose:hover { color: var(--green); }
+  .fignav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 16px; border-top: 1px solid var(--line); padding-top: 10px; }
+  .fignext { border: 1px solid var(--gold-2); background: none; color: var(--green); cursor: pointer; border-radius: 2px; padding: 2px 12px 4px; font-size: 1rem; }
+  .fignext:hover { border-color: var(--gold); color: var(--gold); }
+  .figcount { font-variant: small-caps; letter-spacing: .18em; font-size: .8rem; color: var(--gold); }
+  @media (max-width: 720px) {
+    .figdlg { padding: 22px 18px 16px; width: calc(100vw - 24px); }
+    .figpane { grid-template-columns: 1fr; gap: 14px 0; }
+  }
+</style>
+
+<script>
+  const dlg = document.querySelector('.figdlg') as HTMLDialogElement | null;
+  const btns = Array.from(document.querySelectorAll('.figbtn')) as HTMLButtonElement[];
+  if (dlg && btns.length) {
+    const panes = Array.from(dlg.querySelectorAll('.figpane')) as HTMLElement[];
+    const count = dlg.querySelector('.figcount') as HTMLElement;
+    let cur = 0;
+    const show = (i: number) => {
+      cur = (i + panes.length) % panes.length;
+      panes.forEach((p, k) => (p.hidden = k !== cur));
+      btns.forEach((b, k) => b.setAttribute('aria-current', String(k === cur)));
+      if (count) count.textContent = `${cur + 1} / ${panes.length}`;
+    };
+    btns.forEach((b, i) =>
+      b.addEventListener('click', () => {
+        show(i);
+        if (!dlg.open) dlg.showModal();
+      })
+    );
+    dlg.querySelector('.figclose')?.addEventListener('click', () => dlg.close());
+    dlg.querySelectorAll('.fignext').forEach((n) =>
+      n.addEventListener('click', () => show(cur + Number((n as HTMLElement).dataset.step)))
+    );
+    dlg.addEventListener('click', (e) => {
+      if (e.target === dlg) dlg.close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (!dlg.open) return;
+      if (e.key === 'ArrowRight') show(cur + 1);
+      if (e.key === 'ArrowLeft') show(cur - 1);
+    });
+    dlg.addEventListener('close', () => btns.forEach((b) => b.setAttribute('aria-current', 'false')));
+  }
+</script>

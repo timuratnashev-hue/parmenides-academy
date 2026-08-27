@@ -1,0 +1,102 @@
+---
+import Base from '../../layouts/Base.astro';
+import { TELEGRAM } from '../../i18n';
+import { chapters, sections, order } from '../../data/parmenidesText';
+
+const p1 = chapters.filter((c) => c.part === 1);
+const p2 = chapters.filter((c) => c.part === 2);
+const chars = order.reduce((n, k) => n + sections[k].r.length, 0);
+---
+<Base
+  title="Платон, «Парменид» — полный текст: греческий оригинал и русский перевод по разделам Стефануса"
+  description="Диалог Платона «Парменид» целиком, 126a–166c: греческий текст Бёрнета и русский перевод В. Н. Карпова в двух столбцах, с постоянной ссылкой на каждый из 201 раздела Стефануса и навигацией по восьми гипотезам."
+  path="/parmenid"
+  jsonld={{
+    '@context': 'https://schema.org',
+    '@type': 'Book',
+    name: 'Платон. Парменид (Παρμενίδης)',
+    author: { '@type': 'Person', name: 'Платон', sameAs: 'https://www.wikidata.org/wiki/Q859' },
+    translator: { '@type': 'Person', name: 'В. Н. Карпов' },
+    editor: { '@type': 'Person', name: 'John Burnet' },
+    inLanguage: ['ru', 'grc'],
+    url: 'https://parmenides.academy/parmenid',
+    isAccessibleForFree: true,
+    license: 'https://creativecommons.org/licenses/by-sa/3.0/',
+    sameAs: 'https://www.wikidata.org/wiki/Q1130762',
+    publisher: { '@type': 'EducationalOrganization', name: 'Parmenides Academy', url: 'https://parmenides.academy' },
+  }}
+>
+  <section class="cover">
+    <span class="rule"></span>
+    <span class="kick">полный текст · 126a–166c</span>
+    <h1>Платон<br />«Парменид»</h1>
+    <p class="sub">Греческий оригинал и русский перевод, раздел за разделом</p>
+    <span class="greek">Πλάτων · Παρμενίδης</span>
+    <span class="orn">❈</span>
+    <span class="genre">201 раздел по Стефанусу · постоянная ссылка на каждый</span>
+  </section>
+
+  <section class="lede">
+    <p>Самый трудный текст западной традиции лежит в русской сети разрозненно: перевод на одном сайте, греческий оригинал на другом, номера Стефануса — где как. Здесь они сведены вместе: слева русский, справа греческий, у каждого раздела свой адрес, который не стыдно поставить в сноску.</p>
+    <p>Перевод — В. Н. Карпова (1879), общественное достояние. Греческий — критическое издание Бёрнета (Oxford, 1901). Мы читаем этот диалог на семинаре медленного чтения и постепенно добавляем сюда собственный перевод спорных мест и разбор разночтений между пятью русскими переводами.</p>
+  </section>
+
+  <section class="toc">
+    <h2>Часть первая <span class="mut">— теория идей под вопросом</span></h2>
+    <ol>
+      {p1.map((c) => (
+        <li>
+          <a href={`/parmenid/${c.slug}`}><span class="ttl">{c.title}</span><span class="rg">{c.first}–{c.last}</span></a>
+          <p class="ann">{c.note}</p>
+        </li>
+      ))}
+    </ol>
+
+    <h2>Часть вторая <span class="mut">— упражнение: восемь гипотез</span></h2>
+    <ol class="second">
+      {p2.map((c) => (
+        <li>
+          <a href={`/parmenid/${c.slug}`}><span class="ttl">{c.title}</span><span class="rg">{c.first}–{c.last}</span></a>
+          <p class="ann">{c.note}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="howto">
+    <span class="orn">❈</span>
+    <h2>Как этим пользоваться</h2>
+    <p><b>Ссылка на любое место.</b> Адрес вида <span class="mono">parmenides.academy/parmenid/155e</span> открывает нужный раздел прямо в контексте. Щелчок по номеру раздела копирует такую ссылку в буфер.</p>
+    <p><b>Греческий по требованию.</b> По умолчанию виден только русский текст. Кнопка «показать греческий» разворачивает второй столбец — и остаётся включённой на всех страницах.</p>
+    <p><b>Открытый доступ.</b> Оба текста свободны: перевод Карпова — общественное достояние, греческий Бёрнета — CC BY-SA. Наша разметка и навигация тоже открыты; перепечатывайте со ссылкой.</p>
+  </section>
+
+  <section class="invite">
+    <p>{chars.toLocaleString('ru-RU')} знаков русского текста и столько же греческого — это восемь встреч медленного чтения. Частный семинар, участие по рекомендации или после собеседования.</p>
+    <p class="actions">
+      <a class="btn" href={TELEGRAM} target="_blank" rel="noopener">Написать Тимуру</a>
+      <a class="btn ghost" href="/map">Карта филиаций</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .lede { max-width: 72ch; }
+  .toc h2 { margin-top: 1.6em; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  .toc h2 .mut { font-weight: 400; font-size: .8em; font-style: italic; }
+  .toc ol { list-style: none; padding: 0; margin: 0; }
+  .toc li { position: relative; padding: 14px 0 12px 1.4em; border-bottom: 1px solid var(--line); }
+  .toc li::before { content: '❧'; position: absolute; left: 0; top: 15px; font-size: .8rem; color: var(--gold-2); }
+  .toc li a { display: flex; align-items: baseline; gap: 14px; text-decoration: none; color: var(--ink); }
+  .toc li a:hover .ttl { color: var(--gold); }
+  .toc .ttl { font-size: 1.12rem; font-family: var(--display, inherit); }
+  .toc .rg { margin-left: auto; font-family: var(--serif); font-size: .8rem; color: var(--mut); letter-spacing: .06em; white-space: nowrap; }
+  .toc .ann { margin: 4px 0 0; font-size: .93rem; color: var(--soft); max-width: 78ch; font-style: italic; }
+
+  .howto { margin-top: 2.6em; border-top: 1px solid var(--line); padding-top: 6px; text-align: left; }
+  .howto p { max-width: 76ch; }
+  .mono { font-family: var(--serif); background: var(--paper-2); padding: 1px 6px; border-radius: 2px; }
+
+  .invite { text-align: center; margin-top: 3em; border-top: 1px solid var(--line); padding-top: 18px; }
+  .invite p { max-width: 62ch; margin: 0 auto 1.2em; font-style: italic; color: var(--soft); }
+</style>

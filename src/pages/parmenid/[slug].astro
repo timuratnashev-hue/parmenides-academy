@@ -1,0 +1,200 @@
+---
+import Base from '../../layouts/Base.astro';
+import { TELEGRAM } from '../../i18n';
+import { sections, chapters, flow } from '../../data/parmenidesText';
+
+export function getStaticPaths() {
+  return chapters.map((c, i) => ({
+    params: { slug: c.slug },
+    props: { c, prev: chapters[i - 1] ?? null, next: chapters[i + 1] ?? null },
+  }));
+}
+
+const { c, prev, next } = Astro.props;
+const range = `${c.first}–${c.last}`;
+const partName = c.part === 1 ? 'Часть первая' : 'Часть вторая';
+const turns = flow[c.slug];
+const paras = (s: string) => s.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+---
+<Base
+  title={`Платон, «Парменид» ${range} — ${c.title}. Греческий оригинал и русский перевод`}
+  description={`${c.note} Текст ${range}: русский перевод и греческий оригинал (Burnet, OCT), постоянная ссылка на каждый раздел Стефануса.`}
+  path={`/parmenid/${c.slug}`}
+  wide
+  jsonld={{
+    '@context': 'https://schema.org',
+    '@type': 'ScholarlyArticle',
+    headline: `Платон, «Парменид» ${range}: ${c.title}`,
+    about: { '@type': 'Book', name: 'Παρμενίδης', author: { '@type': 'Person', name: 'Платон' } },
+    isPartOf: { '@type': 'Book', name: 'Платон. Парменид', url: 'https://parmenides.academy/parmenid' },
+    inLanguage: ['ru', 'grc'],
+    license: 'https://creativecommons.org/licenses/by-sa/3.0/',
+    publisher: { '@type': 'EducationalOrganization', name: 'Parmenides Academy', url: 'https://parmenides.academy' },
+    citation: 'Plato, Parmenides, ed. J. Burnet, Platonis Opera II, Oxford 1901; пер. В. Н. Карпова, СПб. 1879',
+  }}
+>
+  <nav class="crumbs">
+    <a href="/parmenid">Платон, «Парменид»</a> <span class="sep">·</span> <span>{partName}</span>
+  </nav>
+
+  <header class="chead">
+    <span class="kick">{range}</span>
+    <h1>{c.title}</h1>
+    <p class="note">{c.note}</p>
+  </header>
+
+  <div class="tools">
+    <button id="grcBtn" type="button" aria-pressed="false">Греческий оригинал</button>
+    <span class="hint">Щелчок по номеру раздела копирует постоянную ссылку.</span>
+  </div>
+
+  <div class="reader" id="reader">
+    <div class="flow" id="flow">
+      {turns.map((runs) => (
+        <p class="turn">
+          {runs.map((r) => (r.m
+            ? <a class="st" id={`f-${r.m}`} href={`/parmenid/${r.m}`} data-sec={r.m} title={`Постоянная ссылка на ${r.m}`}>{r.m}</a>
+            : <span set:html={r.t} />))}
+        </p>
+      ))}
+    </div>
+
+    <div class="grid" id="grid">
+      {c.sections.map((k) => (
+        <section class="sec" id={k}>
+          <a class="st" href={`/parmenid/${k}`} data-sec={k} title={`Постоянная ссылка на ${k}`}>{k}</a>
+          <div class="ru">{paras(sections[k].r).map((p) => <p>{p}</p>)}</div>
+          <div class="gr" lang="grc">{paras(sections[k].g).map((p) => <p>{p}</p>)}</div>
+        </section>
+      ))}
+    </div>
+  </div>
+
+  <nav class="pager">
+    {prev ? <a class="prev" href={`/parmenid/${prev.slug}`}><span>← предыдущее</span>{prev.title}</a> : <span />}
+    {next ? <a class="next" href={`/parmenid/${next.slug}`}><span>следующее →</span>{next.title}</a> : <span />}
+  </nav>
+
+  <section class="cite">
+    <h2>Как процитировать</h2>
+    <p class="mono">Платон. Парменид, {range} // Parmenides Academy. URL: https://parmenides.academy/parmenid/{c.slug}</p>
+    <p class="src"><b>Греческий текст:</b> Plato, <i>Parmenides</i>, в изд.: J. Burnet, <i>Platonis Opera</i>, vol. II, Oxford: Clarendon Press, 1901. Электронная версия — <a href="https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0173" target="_blank" rel="noopener">Perseus Digital Library</a>, лицензия CC BY-SA 3.0.</p>
+    <p class="src"><b>Русский перевод:</b> В. Н. Карпов, «Сочинения Платона», ч. VI, СПб., 1879 — общественное достояние. Сверено по <a href="https://ru.wikisource.org/wiki/Парменид_(Платон;_Карпов)" target="_blank" rel="noopener">Викитеке</a>. В издании 1879 года диалог набран сплошным текстом; здесь реплики разнесены по абзацам, слова переводчика не изменены.</p>
+    <p class="src mut">Разбивка по разделам Стефануса, вёрстка и навигация — Parmenides Academy. Копируйте и перепечатывайте со ссылкой.</p>
+  </section>
+
+  <section class="invite">
+    <span class="orn">❈</span>
+    <p>Этот текст мы читаем вслух, медленно, сверяясь с греческим оригиналом, — по одному фрагменту за встречу. Участие в частном семинаре — по рекомендации или после короткого собеседования.</p>
+    <p class="actions"><a class="btn" href={TELEGRAM} target="_blank" rel="noopener">Написать Тимуру</a></p>
+  </section>
+</Base>
+
+<script>
+  const btn = document.getElementById('grcBtn') as HTMLButtonElement;
+  const reader = document.getElementById('reader') as HTMLElement;
+  const KEY = 'pa-greek';
+
+  function greekOn() { return reader.classList.contains('with-greek'); }
+
+  function set(on: boolean, scroll = false) {
+    reader.classList.toggle('with-greek', on);
+    btn.setAttribute('aria-pressed', String(on));
+    btn.textContent = on ? 'Скрыть греческий' : 'Греческий оригинал';
+    try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {}
+    if (scroll) mark(true);
+  }
+
+  let init = false;
+  try { init = localStorage.getItem(KEY) === '1'; } catch (e) {}
+  set(init);
+  btn.addEventListener('click', () => set(!greekOn(), true));
+
+  function current(): string | null {
+    const h = decodeURIComponent(location.hash.slice(1));
+    return h ? h.replace(/^f-/, '') : null;
+  }
+
+  function mark(scroll: boolean) {
+    document.querySelectorAll('.hit').forEach((e) => e.classList.remove('hit'));
+    const sec = current();
+    if (!sec) return;
+    const el = greekOn() ? document.getElementById(sec) : document.getElementById('f-' + sec);
+    if (!el) return;
+    (greekOn() ? el : (el.parentElement as HTMLElement)).classList.add('hit');
+    if (scroll) el.scrollIntoView({ block: 'center' });
+  }
+  mark(false);
+  window.addEventListener('hashchange', () => mark(true));
+
+  document.querySelectorAll<HTMLAnchorElement>('a.st').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      if (!navigator.clipboard) return;
+      e.preventDefault();
+      navigator.clipboard.writeText(location.origin + '/parmenid/' + a.dataset.sec).then(() => {
+        history.replaceState(null, '', '#' + a.dataset.sec);
+        a.classList.add('copied');
+        setTimeout(() => a.classList.remove('copied'), 1500);
+        mark(false);
+      });
+    });
+  });
+</script>
+
+<style>
+  .crumbs { font-family: var(--serif); font-variant: small-caps; letter-spacing: .1em; font-size: .85rem; color: var(--soft); margin-bottom: 10px; }
+  .crumbs a { color: var(--soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .crumbs a:hover { color: var(--gold); }
+  .crumbs .sep { margin: 0 8px; color: var(--gold-2); }
+
+  .chead { border-bottom: 2px solid var(--ink); padding-bottom: 18px; }
+  .chead h1 { margin: 4px 0 8px; }
+  .chead .note { font-style: italic; color: var(--soft); max-width: 66ch; margin: 0; }
+
+  .tools { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); padding: 9px 0; margin-bottom: 30px; display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+  .tools button { font-family: var(--serif); font-variant: small-caps; letter-spacing: .12em; font-size: .85rem; padding: 5px 14px; border: 1px solid var(--line); background: var(--paper-2); border-radius: 2px; cursor: pointer; color: var(--soft); }
+  .tools button:hover { border-color: var(--gold-2); color: var(--ink); }
+  .tools button[aria-pressed='true'] { background: var(--green); color: var(--paper); border-color: var(--green); }
+  .tools .hint { font-family: var(--serif); font-style: italic; font-size: .85rem; color: var(--mut); }
+
+  /* --- сплошное чтение: реплики --- */
+  .flow { max-width: 68ch; }
+  .turn { margin: 0 0 .42em; padding-left: 1.15em; text-indent: -1.15em; }
+  .turn.hit { background: linear-gradient(90deg, rgba(201,178,122,.28), rgba(201,178,122,0)); }
+  .st { font-family: var(--serif); font-variant: small-caps; letter-spacing: .06em; font-size: .72em; color: var(--gold); text-decoration: none; border: 0; padding: 0 .4em 0 .3em; vertical-align: .1em; white-space: nowrap; }
+  .num:hover { color: var(--green); }
+  .st.copied { color: var(--green); }
+  .st.copied::after { content: '✓'; margin-left: .2em; }
+
+  /* --- параллельный вид --- */
+  .grid { display: none; }
+  .reader.with-greek .flow { display: none; }
+  .reader.with-greek .grid { display: block; }
+  .sec { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; align-items: start; padding-left: 5em; scroll-margin-top: 70px; }
+  .sec.hit { background: linear-gradient(90deg, rgba(201,178,122,.24), rgba(201,178,122,0)); }
+  .sec .st { position: absolute; left: 0; top: .3em; width: 3.8em; text-align: right; font-size: .78rem; padding: 0; vertical-align: baseline; }
+  .sec .ru p, .sec .gr p { margin: 0 0 .7em; }
+  .sec .ru p:last-child, .sec .gr p:last-child { margin-bottom: .2em; }
+  .sec .gr { font-size: .95rem; color: #3d3527; }
+
+  .pager { display: flex; justify-content: space-between; gap: 24px; margin: 46px 0 0; border-top: 1px solid var(--line); padding-top: 16px; }
+  .pager a { display: block; max-width: 22em; text-decoration: none; color: var(--ink); font-size: .95rem; }
+  .pager a span { display: block; font-family: var(--serif); font-variant: small-caps; letter-spacing: .1em; font-size: .78rem; color: var(--mut); margin-bottom: 2px; }
+  .pager a:hover { color: var(--gold); }
+  .pager .next { text-align: right; margin-left: auto; }
+
+  .cite { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 10px; }
+  .cite h2 { font-size: 1.1rem; }
+  .cite .mono { font-family: var(--serif); background: var(--paper-2); border-left: 2px solid var(--gold-2); padding: 10px 14px; font-size: .9rem; }
+  .cite .src { font-size: .88rem; color: var(--soft); max-width: 84ch; margin: .5em 0; }
+  .cite .mut { color: var(--mut); font-style: italic; }
+
+  .invite { text-align: center; margin-top: 44px; border-top: 1px solid var(--line); padding-top: 8px; }
+  .invite p { max-width: 60ch; margin: 0 auto 1em; font-style: italic; color: var(--soft); }
+
+  @media (max-width: 760px) {
+    .sec { grid-template-columns: 1fr; padding-left: 0; padding-top: 1.2em; }
+    .sec .st { position: static; display: block; width: auto; text-align: left; margin-bottom: 3px; }
+    .sec .gr { border-left: 2px solid var(--gold-2); padding-left: 12px; margin: .3em 0 1.2em; }
+  }
+</style>

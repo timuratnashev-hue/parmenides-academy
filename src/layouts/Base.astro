@@ -30,6 +30,7 @@ const org = {
 const ld = [org, ...(Array.isArray(jsonld) ? jsonld : jsonld ? [jsonld] : [])];
 const NAV: [string, string][] = [
   ['/', t.nav_home],
+  ['/parmenid', t.nav_text],
   ['/materials', t.nav_materials],
   ['/map', t.nav_map],
   ['/exercises', t.nav_exercises],

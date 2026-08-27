@@ -1,14 +1,27 @@
 # Parmenides Academy
 > Открытая библиотека и частный семинар медленного чтения (участие по рекомендации или собеседованию): «Парменид» Платона как полигон западной мысли. Ведёт Тимур Атнашев, PhD. Материалы открыты для чтения и цитирования со ссылкой на источник.
 
+## Полный текст диалога
+- [Платон, «Парменид», 126a–166c — греческий оригинал и русский перевод](https://parmenides.academy/parmenid)
+- Греческий текст: J. Burnet, Platonis Opera II, Oxford 1901 (Perseus Digital Library, CC BY-SA 3.0). Русский перевод: В. Н. Карпов, СПб. 1879 — общественное достояние.
+- 201 раздел по Стефанусу, у каждого постоянная ссылка вида https://parmenides.academy/parmenid/137c — она открывает нужное место в контексте главы.
+- Части диалога отдельными страницами: /parmenid/ramka (126a–127c), /parmenid/zenon (127d–129e), /parmenid/kritika-idey (130a–135b, здесь аргумент «третьего человека» 132a–133a), /parmenid/uprazhnenie (135c–137b), /parmenid/gipoteza-1 (137c–142a), /parmenid/gipoteza-2 (142b–155d), /parmenid/vdrug (155e–157a, ἐξαίφνης), /parmenid/gipoteza-3 (157b–159a), /parmenid/gipoteza-4 (159b–160a), /parmenid/gipoteza-5 (160b–163a), /parmenid/gipoteza-6 (163b–164a), /parmenid/gipoteza-7 (164b–165d), /parmenid/gipoteza-8 (165e–166c)
+- Машиночитаемая выдача любой главы в plain text: добавьте .txt к адресу, например https://parmenides.academy/parmenid/gipoteza-1.txt — русский и греческий по разделам Стефануса.
+
 ## Главные страницы
 - [Курс и ближайший поток](https://parmenides.academy/)
-- [Карта филиаций «Парменида»: 45 авторов, каналы передачи, источники](https://parmenides.academy/map)
+- [Карта филиаций «Парменида»: 56 авторов, каналы передачи, источники](https://parmenides.academy/map)
 - Каждому автору — отдельная страница /map/<slug> с цитатой в оригинале и переводе, филиацией, учением и источниками (например https://parmenides.academy/map/plotin, /map/prokl, /map/nikolay-kuzanskiy, /map/gegel, /map/alen-badyu)
+- [Формат встречи: хронометраж, принципы, упражнение с переводом](https://parmenides.academy/format)
+- [Фигуры зала: античные атлетические фигуры и упражнения мысли](https://parmenides.academy/figures/1)
 - [Три полигона вне Запада: Чжуан-цзы, Нагарджуна, Ибн Араби — авторские переводы](https://parmenides.academy/polygons)
 - [Упражнения: раздатки по Анаксимандру, Пифагору, Гераклиту, Пармениду](https://parmenides.academy/exercises)
 - [Материалы — библиотека](https://parmenides.academy/materials)
 - [Тимур Атнашев — портфолио](https://parmenides.academy/portfolio)
+
+## Как ссылаться
+- На место в диалоге: Платон. Парменид, 137c // Parmenides Academy. URL: https://parmenides.academy/parmenid/137c
+- Материалы академии открыты; перепечатка и цитирование разрешены со ссылкой на источник.
 
 ## Контакт
 - Telegram: https://t.me/timuratnashev

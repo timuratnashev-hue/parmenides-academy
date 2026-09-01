@@ -1,0 +1,63 @@
+---
+import { variants, EDITIONS } from '../data/variants';
+const { sec } = Astro.props as { sec: string };
+const l = variants[sec];
+---
+{l && (
+  <details class="app" id={`${sec}-var`}>
+    <summary>
+      <span class="orn">❈</span>
+      <span class="lemma" lang="grc">{l.lemma}</span>
+      <span class="cnt">три перевода расходятся</span>
+    </summary>
+    <div class="body">
+      <p class="grc" lang="grc">{l.grc}</p>
+      <ul class="vars">
+        {l.vars.map((v) => (
+          <li>
+            <span class="who">{v.who}<i>{v.year}</i></span>
+            <span class="txt">{v.t}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="why">{l.note}</p>
+      <p class="eds">{l.vars.map((v) => <span>{EDITIONS[v.who]}</span>)}</p>
+    </div>
+  </details>
+)}
+
+<style>
+  .app { margin: .9em 0 1.4em; border-left: 2px solid var(--green); background: var(--paper-2); scroll-margin-top: 80px; }
+  .app > summary {
+    list-style: none; cursor: pointer; padding: 7px 14px;
+    font-family: var(--serif); font-size: .86rem; color: var(--green);
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .app > summary::-webkit-details-marker { display: none; }
+  .app > summary:hover { background: rgba(44,74,56,.06); }
+  .app > summary .orn { font-size: .8em; }
+  .app > summary .lemma { font-size: 1.02rem; }
+  .app > summary .cnt { font-variant: small-caps; letter-spacing: .12em; font-size: .78rem; color: var(--soft); }
+  .app > summary .cnt::before { content: '— '; }
+  .app[open] > summary { border-bottom: 1px solid var(--line); }
+  .app[open] > summary .cnt::after { content: ' ▴'; }
+  .app:not([open]) > summary .cnt::after { content: ' ▾'; }
+
+  .body { padding: 12px 16px 14px; }
+  .grc { margin: 0 0 12px; font-size: 1.06rem; line-height: 1.55; color: #332d20; }
+
+  .vars { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 10px; }
+  .vars li { display: grid; grid-template-columns: 8.5em 1fr; gap: 0 16px; align-items: baseline; }
+  .who { font-family: var(--serif); font-variant: small-caps; letter-spacing: .1em; font-size: .82rem; color: var(--green); white-space: nowrap; }
+  .who i { display: block; font-style: normal; font-variant: normal; letter-spacing: .04em; font-size: .72rem; color: var(--mut); }
+  .txt { font-size: .97rem; line-height: 1.55; }
+
+  .why { font-size: .95rem; line-height: 1.6; color: var(--soft); border-top: 1px solid var(--line); padding-top: 10px; margin: 0 0 10px; max-width: 74ch; }
+  .eds { margin: 0; font-size: .78rem; color: var(--mut); line-height: 1.5; }
+  .eds span { display: block; }
+
+  @media (max-width: 700px) {
+    .vars li { grid-template-columns: 1fr; gap: 2px; }
+    .who i { display: inline; margin-left: .5em; }
+  }
+</style>

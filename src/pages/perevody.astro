@@ -1,0 +1,130 @@
+---
+import Base from '../layouts/Base.astro';
+import { TELEGRAM } from '../i18n';
+import { variants, EDITIONS } from '../data/variants';
+import { chapters } from '../data/parmenidesText';
+
+const ORDER = ['127a', '127b', '127e', '128c', '129a', '137c', '141e', '142b', '156d', '166c'];
+const chapterOf = (sec: string) => chapters.find((c) => c.sections.includes(sec));
+const rows = ORDER.map((sec) => ({ sec, l: variants[sec], c: chapterOf(sec) }));
+const part1 = rows.filter((r) => r.c?.part === 1);
+const part2 = rows.filter((r) => r.c?.part === 2);
+---
+<Base
+  title="Три русских перевода «Парменида»: Карпов, Томасов, Шичалин — десять мест расхождения"
+  description="Карпов 1879, Томасов 1990, Шичалин 2017: десять мест диалога Платона «Парменид», где переводы расходятся содержательно. Вид или идея, одно или единое, «вдруг» или «мгновенность». Таблица разночтений со ссылками на текст."
+  path="/perevody"
+  jsonld={{
+    '@context': 'https://schema.org',
+    '@type': 'ScholarlyArticle',
+    headline: 'Три русских перевода «Парменида»: десять мест расхождения',
+    inLanguage: 'ru',
+    author: { '@type': 'Person', name: 'Тимур Атнашев' },
+    publisher: { '@type': 'EducationalOrganization', name: 'Parmenides Academy', url: 'https://parmenides.academy' },
+  }}
+>
+  <nav class="crumbs"><a href="/materials">Материалы</a> <span class="sep">·</span> <span>Переводы</span></nav>
+
+  <span class="kick">Разночтения</span>
+  <h1>Три перевода «Парменида»</h1>
+  <p class="sub">Василий Карпов 1879 · Н. Н. Томасов 1990 · Юрий Шичалин 2017</p>
+
+  <section class="thesis">
+    <p>Десять мест, где расходятся три русских перевода, складываются в одну закономерность. Перевод В. Н. Карпова 1879 года и перевод Ю. А. Шичалина 2017 года сходятся почти по всем узловым словам: <b>εἶδος</b> у обоих «вид», <b>τὸ ἕν</b> — «одно», <b>ἐστίν</b> — «есть». Особняком стоит перевод Н. Н. Томасова, который ходил как основной с советских изданий 1970-х и по четырёхтомнику 1990 года: у него «идея», «единое», «существует». Именно он приучил русского читателя к тому, что «Парменид» — диалог о едином и об идеях, то есть сочинение по метафизике высшего начала. Дореволюционный перевод и современный оставляют на этих местах обычные греческие слова, и с ними тот же текст читается как упражнение, которое можно проделать над любым предметом. Спор о том, какое чтение вернее, не закрыт. Мы показываем места, где он решается, и оставляем выбор читателю.</p>
+  </section>
+
+  <h2>Часть первая: рамка, Зенон, виды</h2>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Место</th><th>Слово</th><th>Карпов<i>1879</i></th><th>Томасов<i>1990</i></th><th>Шичалин<i>2017</i></th></tr></thead>
+      <tbody>
+        {part1.map((r) => (
+          <tr>
+            <td class="sec"><a href={`/parmenid/${r.c!.slug}#${r.sec}-var`}>{r.sec}</a></td>
+            <td class="lemma" lang="grc">{r.l.lemma}</td>
+            {r.l.vars.map((v) => <td>{v.s}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Часть вторая: восемь гипотез</h2>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Место</th><th>Слово</th><th>Карпов<i>1879</i></th><th>Томасов<i>1990</i></th><th>Шичалин<i>2017</i></th></tr></thead>
+      <tbody>
+        {part2.map((r) => (
+          <tr>
+            <td class="sec"><a href={`/parmenid/${r.c!.slug}#${r.sec}-var`}>{r.sec}</a></td>
+            <td class="lemma" lang="grc">{r.l.lemma}</td>
+            {r.l.vars.map((v) => <td>{v.s}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="hint">Щелчок по номеру открывает это место в тексте диалога: греческая строка, три перевода целиком и разбор, чем разница важна.</p>
+
+  <section class="eds">
+    <h2>Издания</h2>
+    <ul>
+      <li><b>Карпов</b> — {EDITIONS['Карпов']}</li>
+      <li><b>Томасов</b> — {EDITIONS['Томасов']}</li>
+      <li><b>Шичалин</b> — {EDITIONS['Шичалин']}</li>
+    </ul>
+    <p class="mut">Переводы Томасова и Шичалина приведены фрагментами в составе критического разбора, со ссылкой на издание (ст. 1274 ГК РФ). Полные тексты этих изданий здесь не воспроизводятся: за ними — к издателю. Основной текст диалога на сайте — перевод Карпова 1879 года, общественное достояние.</p>
+  </section>
+
+  <section class="cite">
+    <h2>Как процитировать</h2>
+    <p class="mono">Три перевода «Парменида»: десять мест расхождения // Parmenides Academy. URL: https://parmenides.academy/perevody</p>
+  </section>
+
+  <section class="invite">
+    <span class="orn">❈</span>
+    <p>Эти места мы разбираем на семинаре: читаем греческую строку вслух и переводим сами, прежде чем смотреть, как её перевели другие. Участие — по рекомендации или после короткого собеседования.</p>
+    <p class="actions"><a class="btn" href={TELEGRAM} target="_blank" rel="noopener">Написать Тимуру</a> <a class="btn ghost" href="/parmenid">Читать «Парменида» целиком</a></p>
+  </section>
+</Base>
+
+<style>
+  .crumbs { font-family: var(--serif); font-variant: small-caps; letter-spacing: .1em; font-size: .85rem; color: var(--soft); margin-bottom: 10px; }
+  .crumbs a { color: var(--soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .crumbs a:hover { color: var(--gold); }
+  .crumbs .sep { margin: 0 8px; color: var(--gold-2); }
+  .sub { font-style: italic; color: var(--soft); margin: 0 0 4px; }
+
+  .thesis { border-left: 3px solid var(--green); background: var(--paper-2); padding: 18px 22px; margin: 26px 0 34px; }
+  .thesis p { margin: 0; font-size: 1.08rem; line-height: 1.68; max-width: 74ch; }
+  .thesis b { font-weight: 600; color: var(--green); }
+
+  h2 { margin: 28px 0 10px; font-size: 1.15rem; }
+  .tw { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); }
+  thead th { font-family: var(--serif); font-variant: small-caps; letter-spacing: .1em; font-size: .8rem; color: var(--soft); font-weight: 400; border-bottom: 1px solid var(--gold); white-space: nowrap; }
+  thead th i { display: block; font-style: normal; font-variant: normal; letter-spacing: .04em; font-size: .72rem; color: var(--mut); }
+  td.sec a { font-family: var(--serif); font-variant: small-caps; letter-spacing: .06em; color: var(--green); text-decoration: none; white-space: nowrap; }
+  td.sec a:hover { border-bottom: 1px solid var(--green); }
+  td.lemma { font-size: 1rem; color: #332d20; }
+  .hint { font-style: italic; color: var(--mut); font-size: .9rem; margin-top: 10px; }
+
+  .eds { margin-top: 34px; border-top: 1px solid var(--line); padding-top: 10px; }
+  .eds ul { list-style: none; padding: 0; margin: 0 0 12px; }
+  .eds li { font-size: .9rem; color: var(--soft); margin-bottom: 5px; max-width: 84ch; }
+  .eds .mut { font-size: .86rem; color: var(--mut); font-style: italic; max-width: 84ch; }
+
+  .cite { margin-top: 26px; }
+  .cite h2 { font-size: 1.05rem; }
+  .cite .mono { font-family: var(--serif); background: var(--paper-2); border-left: 2px solid var(--gold-2); padding: 10px 14px; font-size: .9rem; }
+
+  .invite { text-align: center; margin-top: 40px; border-top: 1px solid var(--line); padding-top: 8px; }
+  .invite p { max-width: 62ch; margin: 0 auto 1em; font-style: italic; color: var(--soft); }
+
+  @media (max-width: 700px) {
+    table { font-size: .86rem; }
+    th, td { padding: 7px 10px 7px 0; }
+  }
+</style>

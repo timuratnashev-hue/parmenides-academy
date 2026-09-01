@@ -81,7 +81,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
       <nav class="tabs" aria-label="Разделы">
         <div class="wrap">
           {NAV.map(([href, label]) => (
-            <a href={p + href} class:list={['tab', { on: isActive(href) }]} aria-current={isActive(href) ? 'page' : undefined}>{label}</a>
+            <a href={p + href} class:list={['tab', { on: isActive(href), hl: href === '/parmenid' && !isActive(href) }]} aria-current={isActive(href) ? 'page' : undefined}>{label}</a>
           ))}
         </div>
       </nav>
@@ -198,6 +198,9 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   .tabs .wrap { display: flex; gap: 4px; flex-wrap: wrap; align-items: flex-end; justify-content: flex-start; }
   .tab { display: inline-block; padding: 8px 18px 7px; margin-bottom: -1px; background: var(--paper-2); border: 1px solid var(--line); border-bottom: 1px solid var(--gold); border-radius: 3px 3px 0 0; text-decoration: none; font-variant: small-caps; letter-spacing: .18em; font-size: .85rem; color: var(--soft); }
   .tab:hover { color: var(--gold); }
+  .tab.hl { color: var(--gold); border-color: var(--gold-2); }
+  .tab.hl::before { content: '❈'; margin-right: 7px; font-size: .68em; vertical-align: 1px; color: var(--gold-2); }
+  .tab.hl:hover::before { color: var(--gold); }
   .tab.on { background: var(--paper); color: var(--ink); border-color: var(--gold); border-bottom-color: var(--paper); border-top: 2px solid var(--gold); padding-top: 9px; }
   .page { padding-top: 40px; }
 

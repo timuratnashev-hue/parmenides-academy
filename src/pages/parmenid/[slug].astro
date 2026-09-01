@@ -2,6 +2,8 @@
 import Base from '../../layouts/Base.astro';
 import { TELEGRAM } from '../../i18n';
 import { sections, chapters, flow, order } from '../../data/parmenidesText';
+import { variants } from '../../data/variants';
+import Apparatus from '../../components/Apparatus.astro';
 
 export function getStaticPaths() {
   const pages: any[] = chapters.map((c, i) => ({
@@ -62,6 +64,8 @@ const SRC_RUS = 'пер. В. Н. Карпова, «Сочинения Плато
       <div class="gr" lang="grc">{paras(sections[sec].g).map((p) => <p>{p}</p>)}</div>
     </div>
 
+    <Apparatus sec={sec} />
+
     <p class="incontext"><a class="btn" href={`/parmenid/${c.slug}#${sec}`}>Читать в контексте: {c.title} →</a></p>
 
     <nav class="pager">
@@ -113,26 +117,31 @@ const SRC_RUS = 'пер. В. Н. Карпова, «Сочинения Плато
 
     <div class="tools">
       <button id="grcBtn" type="button" aria-pressed="false">Греческий оригинал</button>
+      {c.sections.some((k: string) => variants[k]) && <button id="varBtn" type="button" aria-pressed="false">Разночтения переводов</button>}
       <span class="hint">Щелчок по номеру раздела копирует постоянную ссылку.</span>
     </div>
 
     <div class="reader" id="reader">
       <div class="flow" id="flow">
         {turns.map((runs: any[]) => (
-          <p class="turn">
-            {runs.map((r: any) => (r.m
-              ? <a class="st" id={`f-${r.m}`} href={`/parmenid/${r.m}`} data-sec={r.m} title={`Постоянная ссылка на ${r.m}`}>{r.m}</a>
-              : <span set:html={r.t} />))}
-          </p>
+          <>
+            <p class="turn">
+              {runs.map((r: any) => (r.m
+                ? <a class:list={['st', { has: !!variants[r.m] }]} id={`f-${r.m}`} href={`/parmenid/${r.m}`} data-sec={r.m} title={`Постоянная ссылка на ${r.m}`}>{r.m}</a>
+                : <span set:html={r.t} />))}
+            </p>
+            {runs.filter((r: any) => r.m && variants[r.m]).map((r: any) => <Apparatus sec={r.m} />)}
+          </>
         ))}
       </div>
 
       <div class="grid" id="grid">
         {c.sections.map((k: string) => (
           <section class="sec" id={k}>
-            <a class="st" href={`/parmenid/${k}`} data-sec={k} title={`Постоянная ссылка на ${k}`}>{k}</a>
+            <a class:list={['st', { has: !!variants[k] }]} href={`/parmenid/${k}`} data-sec={k} title={`Постоянная ссылка на ${k}`}>{k}</a>
             <div class="ru">{paras(sections[k].r).map((p) => <p>{p}</p>)}</div>
             <div class="gr" lang="grc">{paras(sections[k].g).map((p) => <p>{p}</p>)}</div>
+            <div class="apwrap"><Apparatus sec={k} /></div>
           </section>
         ))}
       </div>
@@ -194,6 +203,32 @@ const SRC_RUS = 'пер. В. Н. Карпова, «Сочинения Плато
     mark(false);
     window.addEventListener('hashchange', () => mark(true));
 
+    const vb = document.getElementById('varBtn') as HTMLButtonElement | null;
+    const apps = () => Array.from(document.querySelectorAll<HTMLDetailsElement>('details.app'));
+    if (vb) {
+      const setAll = (on: boolean) => {
+        apps().forEach((d) => { d.open = on; });
+        vb.setAttribute('aria-pressed', String(on));
+        vb.textContent = on ? 'Свернуть разночтения' : 'Разночтения переводов';
+      };
+      vb.addEventListener('click', () => setAll(vb.getAttribute('aria-pressed') !== 'true'));
+    }
+
+    const openFromHash = () => {
+      const h = decodeURIComponent(location.hash.slice(1));
+      if (!h.endsWith('-var')) return;
+      const d = document.getElementById(h) as HTMLDetailsElement | null;
+      if (!d) return;
+      d.open = true;
+      d.scrollIntoView({ block: 'center' });
+    };
+    openFromHash();
+    window.addEventListener('hashchange', openFromHash);
+
+    apps().forEach((d) => d.addEventListener('toggle', () => {
+      if (d.open) history.replaceState(null, '', '#' + d.id);
+    }));
+
     document.querySelectorAll<HTMLAnchorElement>('a.st').forEach((a) => {
       a.addEventListener('click', (e) => {
         if (!navigator.clipboard) return;
@@ -229,7 +264,7 @@ const SRC_RUS = 'пер. В. Н. Карпова, «Сочинения Плато
   /* одиночный раздел */
   .single { display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; margin: 28px 0 6px; align-items: start; }
   .single .ru p, .single .gr p { margin: 0 0 .8em; }
-  .single .gr { font-size: .95rem; color: #3d3527; border-left: 1px solid var(--line); padding-left: 34px; }
+  .single .gr { font-size: 1.16rem; line-height: 1.62; color: #332d20; border-left: 1px solid var(--line); padding-left: 34px; }
   .incontext { margin: 18px 0 0; }
 
   /* сплошное чтение */
@@ -238,6 +273,9 @@ const SRC_RUS = 'пер. В. Н. Карпова, «Сочинения Плато
   .turn.hit { background: linear-gradient(90deg, rgba(201,178,122,.28), rgba(201,178,122,0)); }
   .st { font-family: var(--serif); font-variant: small-caps; letter-spacing: .06em; font-size: .72em; color: var(--gold); text-decoration: none; border: 0; padding: 0 .4em 0 .3em; vertical-align: .1em; white-space: nowrap; }
   .st:hover { color: var(--green); }
+  .st.has { color: var(--green); }
+  .st.has::after { content: '❈'; font-size: .8em; margin-left: .15em; vertical-align: .05em; }
+  .apwrap { grid-column: 1 / -1; }
   .st.copied { color: var(--green); }
   .st.copied::after { content: '✓'; margin-left: .2em; }
 
@@ -250,7 +288,7 @@ const SRC_RUS = 'пер. В. Н. Карпова, «Сочинения Плато
   .sec .st { position: absolute; left: 0; top: .3em; width: 3.8em; text-align: right; font-size: .78rem; padding: 0; vertical-align: baseline; }
   .sec .ru p, .sec .gr p { margin: 0 0 .7em; }
   .sec .ru p:last-child, .sec .gr p:last-child { margin-bottom: .2em; }
-  .sec .gr { font-size: .95rem; color: #3d3527; }
+  .sec .gr { font-size: 1.16rem; line-height: 1.62; color: #332d20; }
 
   .pager { display: flex; justify-content: space-between; gap: 24px; margin: 46px 0 0; border-top: 1px solid var(--line); padding-top: 16px; }
   .pager a { display: block; max-width: 22em; text-decoration: none; color: var(--ink); font-size: .95rem; }

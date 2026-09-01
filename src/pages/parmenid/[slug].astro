@@ -119,6 +119,7 @@ const SRC_RUS = 'пер. В. Н. Карпова, «Сочинения Плато
       <button id="grcBtn" type="button" aria-pressed="false">Греческий оригинал</button>
       {c.sections.some((k: string) => variants[k]) && <button id="varBtn" type="button" aria-pressed="false">Разночтения переводов</button>}
       <span class="hint">Щелчок по номеру раздела копирует постоянную ссылку.</span>
+      {c.sections.some((k: string) => variants[k]) && <a class="hint vlink" href="/perevody">Три перевода расходятся в десяти местах — почему это важно →</a>}
     </div>
 
     <div class="reader" id="reader">
@@ -260,6 +261,8 @@ const SRC_RUS = 'пер. В. Н. Карпова, «Сочинения Плато
   .tools button:hover { border-color: var(--gold-2); color: var(--ink); }
   .tools button[aria-pressed='true'] { background: var(--green); color: var(--paper); border-color: var(--green); }
   .tools .hint { font-family: var(--serif); font-style: italic; font-size: .85rem; color: var(--mut); }
+  .tools .vlink { color: var(--green); text-decoration: none; border-bottom: 1px solid var(--gold-2); font-style: normal; }
+  .tools .vlink:hover { border-bottom-color: var(--green); }
 
   /* одиночный раздел */
   .single { display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; margin: 28px 0 6px; align-items: start; }

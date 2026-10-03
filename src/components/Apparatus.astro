@@ -23,6 +23,7 @@ const paras: string[] = l ? l.note.split(/\n\s*\n/).map((t) => t.trim()).filter(
       </ul>
       <div class="why">{paras.map((t) => <p>{t}</p>)}</div>
       <p class="eds">{l.vars.map((v) => <span>{EDITIONS[v.who]}</span>)}</p>
+      <p class="all"><a href="/perevody">Все десять мест расхождения →</a></p>
     </div>
   </details>
 )}
@@ -58,6 +59,9 @@ const paras: string[] = l ? l.note.split(/\n\s*\n/).map((t) => t.trim()).filter(
   .why p:last-child { margin-bottom: 0; }
   .eds { margin: 0; font-size: .78rem; color: var(--mut); line-height: 1.5; }
   .eds span { display: block; }
+  .all { margin: 8px 0 0; font-family: var(--serif); font-variant: small-caps; letter-spacing: .1em; font-size: .78rem; }
+  .all a { color: var(--green); text-decoration: none; border-bottom: 1px solid var(--gold-2); }
+  .all a:hover { border-bottom-color: var(--green); }
 
   @media (max-width: 700px) {
     .vars li { grid-template-columns: 1fr; gap: 2px; }

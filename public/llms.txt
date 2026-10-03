@@ -10,8 +10,8 @@
 
 ## Главные страницы
 - [Курс и ближайший поток](https://parmenides.academy/)
-- [Карта филиаций «Парменида»: 56 авторов, каналы передачи, источники](https://parmenides.academy/map)
-- Каждому автору — отдельная страница /map/<slug> с цитатой в оригинале и переводе, филиацией, учением и источниками (например https://parmenides.academy/map/plotin, /map/prokl, /map/nikolay-kuzanskiy, /map/gegel, /map/alen-badyu)
+- [Карта филиаций «Парменида»: 62 автора, каналы передачи, источники](https://parmenides.academy/map)
+- Каждому автору — отдельная страница /map/<slug> с цитатой в оригинале и переводе, филиацией, учением и источниками (например https://parmenides.academy/map/plotin, /map/prokl, /map/nikolay-kuzanskiy, /map/gegel, /map/alen-badyu, /map/niklas-luman)
 - [Формат встречи: хронометраж, принципы, упражнение с переводом](https://parmenides.academy/format)
 - [Фигуры зала: античные атлетические фигуры и упражнения мысли](https://parmenides.academy/figures/1)
 - [Три полигона вне Запада: Чжуан-цзы, Нагарджуна, Ибн Араби — авторские переводы](https://parmenides.academy/polygons)

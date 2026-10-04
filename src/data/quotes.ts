@@ -1,4 +1,4 @@
-// Цитаты к узлам карты филиаций. Собраны 25.08.2026; confidence: high — дословно и сверено/уверенно, medium — дословность не сверена, low — оригинал не приводится, только locus и парафраз.
+// Цитаты к узлам карты филиаций. Собраны 25.08.2026, пять добавлены 04.10.2026 (Клибанский, Байервальтес, Хальфвассен, Ясперс, Луман); confidence: high — дословно и сверено/уверенно, medium — дословность не сверена, low — оригинал не приводится, только locus и парафраз.
 export type Quote = { n: string; locus: string; original: string; translation: string; translator: string; lang: string; confidence: 'high'|'medium'|'low'; verified: string; note: string; extra_sources: {t:string;u:string}[] };
 export const quotes: Record<string, Quote> = {
  "Марий Викторин": {
@@ -931,6 +931,99 @@ export const quotes: Record<string, Quote> = {
    {
     "t": "H. J. Moore, «The Russian Cusanus: S. L. Frank and the Russian reception of Nicholas of Cusa», The Philosophical Forum 54 (2023)",
     "u": "https://doi.org/10.1111/phil.12331"
+   }
+  ]
+ },
+ "Никлас Луман": {
+  "n": "Никлас Луман",
+  "locus": "Zettelkasten II, Zettel 21/3d18d59i27b2 (Niklas Luhmann-Archiv, Bielefeld, ZK_2_NB_21-3d18d59i27b2_V); цитата Кузанца — De docta ignorantia I, 6 (Philosophisch-theologische Schriften I, ed. L. Gabriel, Wien 1982, S. 212)",
+  "original": "Die coincidentia oppositorum formuliert den Fall einer Unterscheidung, die keine ist. Sie formuliert, ähnlich wie das re-entry, die Unterscheidungsparadoxie. […] «Maxime igitur verum est ipsum maximum simpliciter esse vel non esse, vel esse et non esse, vel nec esse nec non esse; et plura nec dici nec cogitari possunt.»",
+  "translation": "Coincidentia oppositorum формулирует случай различения, которое различением не является. Подобно re-entry, она формулирует парадокс различения. […] «Итак, в наивысшей степени истинно, что само абсолютно максимальное есть, или не есть, или есть и не есть, или ни есть, ни не есть; и больше этого нельзя ни сказать, ни помыслить».",
+  "translator": "перевод мой",
+  "lang": "la+de",
+  "confidence": "high",
+  "verified": "https://v0.api.niklas-luhmann-archiv.de/ZK/zettel/ZK_2_NB_21-3d18d59i27b2_V/xml",
+  "note": "Тетралемма Кузанца (есть / не есть / и то и другое / ни то ни другое) повторяет каркас гипотез: «ни то ни другое» первой гипотезы (137c–142a), «всё» второй (142b–155e), итог 166c — «есть и не есть». Луман читает её как парадокс различения, то есть как re-entry.",
+  "extra_sources": [
+   {
+    "t": "Карточка в портале Niklas Luhmann-Archiv",
+    "u": "https://niklas-luhmann-archiv.de/bestand/zettelkasten/zettel/ZK_2_NB_21-3d18d59i27b2_V"
+   },
+   {
+    "t": "ZK II 21/3d18d59i27b4: Gott als das non-aliud; «alteritas ei convenire nequit»",
+    "u": "https://niklas-luhmann-archiv.de/bestand/zettelkasten/zettel/ZK_2_NB_21-3d18d59i27b4_V"
+   },
+   {
+    "t": "ZK II 21/3d26g1i46: «unitas per se est inattingibilis. Non igitur attingitur unitas nisi mediante alteritate»",
+    "u": "https://niklas-luhmann-archiv.de/bestand/zettelkasten/zettel/ZK_2_NB_21-3d26g1i46_V"
+   }
+  ]
+ },
+ "Раймонд Клибанский": {
+  "n": "Раймонд Клибанский",
+  "locus": "R. Klibansky, «Plato's Parmenides in the Middle Ages and the Renaissance», Mediaeval and Renaissance Studies 1 (1943), 281–330, p. 284 (p. 4 оттиска)",
+  "original": "This situation was radically changed when, some time before his death in 1286, the Dominican friar William of Moerbeke translated Proclus' Commentary on the Parmenides. Embedded in this work, but clearly distinguished from the text of Proclus' exposition, the Platonic dialogue, up to the end of the first hypothesis, became accessible to the Latin world.",
+  "translation": "Положение коренным образом изменилось, когда незадолго до своей смерти в 1286 г. доминиканец Вильгельм из Мёрбеке перевёл комментарий Прокла к «Пармениду». Включённый в этот труд, но чётко отделённый от Проклова изложения, платоновский диалог — до конца первой гипотезы — стал доступен латинскому миру.",
+  "translator": "перевод мой",
+  "lang": "en",
+  "confidence": "high",
+  "verified": "https://archive.org/details/platosparmenides00klibuoft",
+  "note": "Латинское Средневековье знало «Парменид» только в леммах Прокла, 126a–142a, то есть до конца первой гипотезы. Отсюда апофатический перекос всей традиции вплоть до Кузанца — первого на Западе со времён Боэция читателя полного диалога (p. 309).",
+  "extra_sources": [
+   {
+    "t": "Скан оттиска на archive.org",
+    "u": "https://archive.org/details/platosparmenides00klibuoft"
+   }
+  ]
+ },
+ "Вернер Байервальтес": {
+  "n": "Вернер Байервальтес",
+  "locus": "W. Beierwaltes, «Ἐξαίφνης oder: Die Paradoxie des Augenblicks», Philosophisches Jahrbuch 74 (1966/67), 271–283, S. 275",
+  "original": "Die Paradoxie des Augenblicks steht in einer doppelten Analogie zur Paradoxalität des Einen selbst. Gemäß der 1. Hypothesis ist das Eine Nichts von allem kategorial Seienden; gemäß der 2. Hypothesis ist es all dies in eminentem Sinne.",
+  "translation": "Парадокс мгновения находится в двойной аналогии с парадоксальностью самого Единого. Согласно первой гипотезе, Единое есть ничто из всего категориально сущего; согласно второй — оно есть всё это в превосходящем смысле.",
+  "translator": "перевод мой",
+  "lang": "de",
+  "confidence": "high",
+  "verified": "https://philosophisches-jahrbuch.de/wp-content/uploads/2019/03/PJ74_S271-283_Beierwaltes_Die-Paradoxie-des-Augenblicks.pdf",
+  "note": "Мгновение ἐξαίφνης (156d–e) — точка схождения первой гипотезы (137c–142a) и второй (142b–155e). На с. 274 Байервальтес называет его «gleichsam coincidentia oppositorum» — мост к узлам Кузанца и Лумана.",
+  "extra_sources": [
+   {
+    "t": "Philosophisches Jahrbuch 74, PDF статьи",
+    "u": "https://philosophisches-jahrbuch.de/wp-content/uploads/2019/03/PJ74_S271-283_Beierwaltes_Die-Paradoxie-des-Augenblicks.pdf"
+   }
+  ]
+ },
+ "Йенс Хальфвассен": {
+  "n": "Йенс Хальфвассен",
+  "locus": "J. Halfwassen, Der Aufstieg zum Einen. Untersuchungen zu Platon und Plotin, 2. Aufl., München–Leipzig: Saur 2006, S. 267",
+  "original": "Die Kontroverse um die Auslegung des dialektischen Teils des Parmenides beschränkt sich indes nicht auf die einfache Alternative zwischen inhaltlich positiver, metaphysischer Deutung und inhaltlich negativer, logischer Deutung; vielmehr gibt es innerhalb beider Richtungen wiederum mehrere, grundsätzlich verschiedene Interpretationsansätze. Dabei können wir mit Proklos vier Grundtypen der Auslegung unterscheiden, die sich bei allen Variationen im Einzelnen von der Antike bis zur Gegenwart durchhalten.",
+  "translation": "Однако спор о толковании диалектической части «Парменида» не сводится к простой альтернативе между содержательно позитивным, метафизическим и содержательно негативным, логическим толкованием; внутри каждого направления есть несколько принципиально разных подходов. Вслед за Проклом можно различить четыре основных типа толкования, которые при всех частных вариациях сохраняются от Античности до наших дней.",
+  "translator": "перевод мой",
+  "lang": "de",
+  "confidence": "medium",
+  "verified": "https://kups.ub.uni-koeln.de/9336/",
+  "note": "Речь о второй части диалога (137c–166c); типология восходит к обзору толкований у Прокла (In Parm. I, 630 сл. Cousin). Дословность сверена по цитате в диссертации S. Kim (Köln), не по самой книге.",
+  "extra_sources": [
+   {
+    "t": "S. Kim, Platons Parmenides und eine Untersuchung des metaphysischen Grundes (Diss. Köln), прим. 15",
+    "u": "https://kups.ub.uni-koeln.de/9336/"
+   }
+  ]
+ },
+ "Карл Ясперс": {
+  "n": "Карл Ясперс",
+  "locus": "K. Jaspers, Die großen Philosophen, Bd. I, München 1957, Kap. Nagarjuna, S. 944 = Karl Jaspers Gesamtausgabe I/15.2, Basel: Schwabe 2022, S. 922",
+  "original": "In Nagarjunas Denken läßt sich eine formale Analogie einerseits zur Dialektik im zweiten Teil von Platos »Parmenides«, andererseits zu moderner Logistik (Wittgenstein) finden.",
+  "translation": "В мышлении Нагарджуны можно найти формальную аналогию, с одной стороны, диалектике второй части платоновского «Парменида», с другой — современной логистике (Витгенштейн).",
+  "translator": "перевод мой",
+  "lang": "de",
+  "confidence": "high",
+  "verified": "https://digi.hadw-bw.de/view/kjg1_15_2/0290",
+  "note": "Издатели собрания сочинений комментируют это место отсылкой к Parm. 137c–166c. Прямая сшивка «Парменида» с Нагарджуной — та же, что на нашей странице /polygons.",
+  "extra_sources": [
+   {
+    "t": "KJG I/15.2, гл. Плотин, S. 728: первая и вторая «гипотезы» «Парменида» (прим. изд.: 137e–142a, 142b–155e)",
+    "u": "https://digi.hadw-bw.de/view/kjg1_15_2/0096"
    }
   ]
  }

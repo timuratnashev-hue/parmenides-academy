@@ -1,0 +1,110 @@
+---
+// Страница внешних ресурсов о Платоне и «Пармениде». Ссылки проверены 27.10.2026.
+import Base from '../layouts/Base.astro';
+
+type R = { t: string; u: string; ann: string; lang: string; c?: string };
+const groups: { id: string; h: string; note: string; items: R[] }[] = [
+  {
+    id: 'ru', h: 'По-русски: семинары, общества, журналы',
+    note: 'Немногие русские места, где «Парменида» читают медленно и всерьёз.',
+    items: [
+      { t: 'Семинар по диалогу «Парменид» — записи', u: 'https://platostudy.ru/parmenid_rec', lang: 'рус',
+        ann: 'Платоновское философское общество, семинар «Медленное чтение Платона» Ирины Протопоповой: семнадцать встреч 2021–2022 гг. в видео и аудио, PDF переводов Томасова и Шичалина.' },
+      { t: 'Платоновское философское общество — Plato Hodie', u: 'https://plato.today/', lang: 'рус',
+        ann: 'Сайт общества (председатель — Р. В. Светлов, СПбГУ): конференции «Универсум платоновской мысли» с публикациями докладов, летние школы, тексты платоников, справочные издания.' },
+      { t: '«Платоновские исследования»', u: 'https://pinvestigations.ru/', lang: 'рус · en',
+        ann: 'Международный научный журнал о платонизме от Античности до наших дней; полный архив выпусков в открытом доступе.' },
+      { t: 'ΣΧΟΛΗ. Философское антиковедение и классическая традиция', u: 'https://classics.nsu.ru/schole/', lang: 'рус · en',
+        ann: 'Журнал Центра античной философии НГУ, выходит с 2007 г.; все тома открыты. Переводы и исследования античных текстов, в том числе платоновских и неоплатонических.' },
+      { t: 'Издательство РХГА: серия «Наследие Платона»', u: 'https://irhga.ru/tag/nasledie-platona/', lang: 'рус',
+        ann: 'Здесь вышел «Парменид» в переводе Ю. А. Шичалина с введением и комментарием (2017) и другие тома серии.' },
+    ],
+  },
+  {
+    id: 'texts', h: 'Текст диалога',
+    note: 'Оригинал и переводы, которые можно открыть сразу. Наш собственный свод — на странице «Текст».',
+    items: [
+      { t: 'Scaife Viewer: греческий текст Бёрнета', u: 'https://scaife.perseus.org/reader/urn:cts:greekLit:tlg0059.tlg009.perseus-grc2:126a/', lang: 'грч · en', c: 'gold',
+        ann: 'Новый просмотрщик Perseus: оригинал по Стефанусу, морфологический разбор каждого слова, параллельный английский перевод.' },
+      { t: 'Perseus Digital Library: «Парменид»', u: 'https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0173:text=Parm.', lang: 'грч · en', c: 'gold',
+        ann: 'Классический Perseus: греческий Бёрнет и английский перевод Г. Фаулера (Loeb, 1926), словари LSJ в один щелчок.' },
+      { t: 'Платон. «Парменид», перевод Н. Н. Томасова', u: 'https://ancientrome.ru/antlitr/t.htm?a=1450240000', lang: 'рус', c: 'gold',
+        ann: 'Стандартный русский перевод (1990) с примечаниями А. А. Тахо-Годи и разметкой по Стефанусу на ancientrome.ru.' },
+      { t: 'Платон. «Парменид», перевод В. Н. Карпова', u: 'https://ru.wikisource.org/wiki/Парменид_(Платон;_Карпов)', lang: 'рус', c: 'gold',
+        ann: 'Перевод 1879 г. в Викитеке, общественное достояние. Тот же перевод у нас — выровненный с греческим.' },
+      { t: 'Plato’s Parmenides: Text, Translation & Introductory Essay', u: 'https://www.platosparmenides.com/', lang: 'грч · en', c: 'gold',
+        ann: 'Сайт издания Арнольда Германа (перевод совместно с С. Хрисакопулу, предисловие Д. Хедли): греческий и английский рядом.' },
+    ],
+  },
+  {
+    id: 'ref', h: 'Справочники и библиографии',
+    note: 'С чего начать, чтобы понять, где сегодня идёт спор.',
+    items: [
+      { t: 'Stanford Encyclopedia of Philosophy: Plato’s Parmenides', u: 'https://plato.stanford.edu/entries/plato-parmenides/', lang: 'en', c: 'amber',
+        ann: 'Лучшее короткое введение: критика идей, «третий человек», логика упражнения с гипотезами. Автор — С. Риклесс, статья регулярно обновляется.' },
+      { t: 'Stanford Encyclopedia of Philosophy: Parmenides', u: 'https://plato.stanford.edu/entries/parmenides/', lang: 'en', c: 'amber',
+        ann: 'Статья Дж. Палмера об историческом Пармениде из Элеи и его поэме — чтобы не путать элеата с героем диалога.' },
+      { t: 'Новая философская энциклопедия: «Парменид»', u: 'https://iphlib.ru/library/collection/newphilenc/document/HASH01fe0f10865aa0b1a72b1bfd', lang: 'рус', c: 'amber',
+        ann: 'Статья о диалоге в электронной библиотеке Института философии РАН: датировка, композиция, линии толкования.' },
+      { t: 'Internet Encyclopedia of Philosophy: Plato', u: 'https://iep.utm.edu/plato/', lang: 'en', c: 'amber',
+        ann: 'Обзор корпуса, хронологии и учения Платона с библиографией — фон для поздних диалогов.' },
+      { t: 'PhilPapers: Plato’s Parmenides', u: 'https://philpapers.org/browse/platos-parmenides', lang: 'en', c: 'amber',
+        ann: 'Постоянно пополняемая библиография статей и книг именно о «Пармениде», с фильтрами по году и доступности.' },
+    ],
+  },
+  {
+    id: 'int', h: 'Мировое сообщество и рецепция',
+    note: 'Общества, издательства и классические исследования о том, как диалог читали две с половиной тысячи лет.',
+    items: [
+      { t: 'International Plato Society', u: 'https://www.platosociety.org/', lang: 'en · fr · it · es · de',
+        ann: 'Главное международное общество платоноведов: Symposium Platonicum раз в три года, журнал Plato Journal, библиография.' },
+      { t: 'International Society for Neoplatonic Studies', u: 'https://www.isns.us/', lang: 'en',
+        ann: 'Общество исследователей неоплатонизма — традиции, которая сделала из «Парменида» богословие Единого.' },
+      { t: 'R. Klibansky, Plato’s Parmenides in the Middle Ages and the Renaissance (1943)', u: 'https://archive.org/details/platosparmenides00klibuoft', lang: 'en',
+        ann: 'Классическая история рецепции, полный скан. Отсюда известно, что Средние века знали диалог только до конца первой гипотезы.' },
+      { t: 'Turner & Corrigan (eds.), Plato’s Parmenides and Its Heritage', u: 'https://doi.org/10.15699/9781589834514', lang: 'en',
+        ann: 'Двухтомник 2010 г. о рецепции диалога от Древней Академии до Прокла и далее — опорный свод для нашей карты филиаций.' },
+      { t: 'The Prometheus Trust', u: 'https://www.prometheustrust.co.uk/', lang: 'en',
+        ann: 'Переиздаёт переводы Томаса Тейлора — автора первого полного английского Платона и переводов Прокла, — и современные работы о платонизме.' },
+      { t: 'Parmenides Publishing', u: 'https://www.parmenides.com/', lang: 'en',
+        ann: 'Издательство, специализирующееся на досократиках и Платоне: монографии и переводы о Пармениде и его наследии.' },
+    ],
+  },
+];
+const total = groups.reduce((s, g) => s + g.items.length, 0);
+const plural = (n: number, a: string, b: string, c: string) => (n % 10 === 1 && n % 100 !== 11 ? a : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? b : c);
+const res = `${total} ${plural(total, 'проверенный ресурс', 'проверенных ресурса', 'проверенных ресурсов')}`;
+const host = (u: string) => new URL(u).hostname.replace(/^www\./, '');
+---
+<Base
+  title="Платон и «Парменид» в сети: ресурсы — семинары, тексты, справочники"
+  description={`${res[0].toUpperCase() + res.slice(1)} о Платоне и диалоге «Парменид»: русские семинары и журналы, греческий текст и переводы, энциклопедии, библиографии, международные общества и классика рецепции.`}
+  path="/resursy"
+>
+  <nav class="crumbs"><a href="/materials">Материалы</a> <span class="sep">·</span> <span>Ресурсы</span></nav>
+  <span class="kick">Ресурсы</span>
+  <h1>Платон и «Парменид» в сети</h1>
+  <p class="sub">{res}: где диалог читают, публикуют, комментируют и изучают его рецепцию. Ссылки проверены в октябре 2026 г.</p>
+  <span class="orn">❈</span>
+  {groups.map((g) => (
+    <section id={g.id}>
+      <h2>{g.h}</h2>
+      <p class="gnote">{g.note}</p>
+      {g.items.map((r) => (
+        <article class="card">
+          <span class:list={['bookmark', r.c]}>{r.lang.split(' · ')[0]}</span>
+          <h3><a href={r.u} target="_blank" rel="noopener">{r.t}</a></h3>
+          <p class="ann">{r.ann}</p>
+          <span class="meta">{host(r.u)} · {r.lang}</span>
+        </article>
+      ))}
+    </section>
+  ))}
+  <p class="gnote">Знаете хороший ресурс, которого здесь нет? Напишите в <a href="https://t.me/timuratnashev" target="_blank" rel="noopener">Telegram</a>.</p>
+</Base>
+
+<style>
+  section { margin: 0 0 8px; }
+  h2 { margin-top: 1.6em; }
+  .gnote { font-style: italic; color: var(--soft); margin: 0 0 14px; }
+</style>

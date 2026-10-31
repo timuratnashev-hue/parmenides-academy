@@ -37,6 +37,20 @@ const NAV: [string, string][] = [
   ['/format', t.nav_format],
   ['/portfolio', t.nav_portfolio],
 ];
+const SHORT_MAP = lang === 'ru' ? 'Карта' : lang === 'en' ? 'Map' : 'Carte';
+const ICONS = {
+  home: '<path d="M4 10l8-6 8 6v10H4z"/><path d="M10 20v-6h4v6"/>',
+  text: '<path d="M12 6c-2-1.5-5-2-8-1.5V19c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V4.5c-3-.5-6 0-8 1.5z"/><path d="M12 6v14.5"/>',
+  map: '<circle cx="12" cy="12" r="2.5"/><circle cx="5" cy="5" r="1.8"/><circle cx="19" cy="5" r="1.8"/><circle cx="5" cy="19" r="1.8"/><circle cx="19" cy="19" r="1.8"/><path d="M10.2 10.2L6.3 6.3M13.8 10.2l3.9-3.9M10.2 13.8l-3.9 3.9M13.8 13.8l3.9 3.9"/>',
+  lib: '<rect x="4" y="4" width="16" height="5"/><rect x="4" y="11" width="16" height="4"/><rect x="4" y="17" width="16" height="3"/>',
+};
+// нижняя панель телефона: четыре раздела в зоне большого пальца (концепция «Кодекс», 31.10.2026)
+const BOT: [string, string, string][] = [
+  ['/', t.nav_home, ICONS.home],
+  ['/parmenid', t.nav_text, ICONS.text],
+  ['/map', SHORT_MAP, ICONS.map],
+  ['/materials', t.nav_materials, ICONS.lib],
+];
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 <!doctype html>
@@ -87,6 +101,15 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
       </nav>
     </header>
 
+    <nav class="botnav" aria-label="Разделы">
+      {BOT.map(([href, label, icon]) => (
+        <a href={p + href} class:list={[{ on: isActive(href) }]} aria-current={isActive(href) ? 'page' : undefined}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" set:html={icon}></svg>
+          <span>{label}</span>
+        </a>
+      ))}
+    </nav>
+
     <main class:list={['wrap', 'page', { wide }]}>
       <slot />
     </main>
@@ -102,6 +125,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
 
     <footer class="site-foot">
       <div class="wrap">
+        <nav class="foot-nav" aria-label="Все разделы">{NAV.map(([href, label]) => <a href={p + href}>{label}</a>)}</nav>
         <span class="kick">{t.footer_series}</span>
         <span class="foot-line">{t.footer}</span>
         <span class="copy">© {t.copyright} · {new Date().getFullYear()}</span>
@@ -222,11 +246,33 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   .prose code { font-size: .9em; background: var(--paper-2); padding: 1px 4px; }
   .actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 1.4em; }
 
+  .foot-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin: 0 0 12px; font-variant: small-caps; letter-spacing: .12em; font-size: .9rem; }
+  .foot-nav a { color: var(--soft); text-decoration: none; padding: 6px 0; }
+  .foot-nav a:hover { color: var(--gold); }
+  .botnav { display: none; }
+
   @media (max-width: 640px) {
     body { font-size: 17px; }
     h1, .cover h1 { font-size: 1.9rem; }
     .cover { padding: 30px 18px; outline-offset: 4px; }
-    .site-head .wrap { flex-direction: column; align-items: flex-start; gap: 10px; }
-    .tab { padding: 7px 12px 6px; font-size: .78rem; letter-spacing: .12em; }
+  }
+
+  /* «Кодекс»: телефон — шапка в одну строку, разделы в нижней панели */
+  @media (max-width: 720px) {
+    body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+    .site-head { padding: 0; border-bottom: 1px solid var(--line); }
+    .site-head .wrap { flex-direction: row; align-items: center; justify-content: space-between; min-height: 52px; gap: 8px; padding: 0 6px 0 16px; }
+    .brand-sub { display: none; }
+    .brand-name { letter-spacing: .22em; font-size: .78rem; }
+    .langs { gap: 0; }
+    .langs a { border: 0; padding: 12px 8px; min-width: 40px; text-align: center; font-size: .82rem; border-radius: 0; }
+    .langs a.on { background: transparent; color: var(--ink); text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 5px; }
+    .tabs { display: none; }
+    .page { padding-top: 22px; }
+    .botnav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; background: var(--paper); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom); }
+    .botnav a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 64px; text-decoration: none; color: var(--soft); font-size: .78rem; }
+    .botnav a.on { color: var(--green); font-weight: 600; }
+    .cta-band { margin-top: 48px; }
+    .btn { padding: 12px 22px 13px; }
   }
 </style>

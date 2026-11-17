@@ -37,6 +37,8 @@ const NAV: [string, string][] = [
   ['/format', t.nav_format],
   ['/portfolio', t.nav_portfolio],
 ];
+// подвал: все разделы, включая те, что не помещаются во вкладки (подкаст «Коэволюция», 18.11.2026)
+const FOOT: [string, string][] = [...NAV, ['/coevolution', t.nav_coevolution]];
 const SHORT_MAP = lang === 'ru' ? 'Карта' : lang === 'en' ? 'Map' : 'Carte';
 const ICONS = {
   home: '<path d="M4 10l8-6 8 6v10H4z"/><path d="M10 20v-6h4v6"/>',
@@ -125,7 +127,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
 
     <footer class="site-foot">
       <div class="wrap">
-        <nav class="foot-nav" aria-label="Все разделы">{NAV.map(([href, label]) => <a href={p + href}>{label}</a>)}</nav>
+        <nav class="foot-nav" aria-label="Все разделы">{FOOT.map(([href, label]) => <a href={p + href}>{label}</a>)}</nav>
         <span class="kick">{t.footer_series}</span>
         <span class="foot-line">{t.footer}</span>
         <span class="copy">© {t.copyright} · {new Date().getFullYear()}</span>

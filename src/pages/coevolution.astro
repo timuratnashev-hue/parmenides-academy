@@ -1,0 +1,234 @@
+---
+// Раздел «Коэволюция»: выпуски подкаста «Кто кого образует · We Form Each Other». Данные — src/data/coevolution.ts.
+// Все карточки отдаются готовым HTML (для поиска); фильтры — маленький скрипт, который только прячет карточки.
+import Base from '../layouts/Base.astro';
+import { EPISODES, CHANNEL, HOSTS, STATUS_LABEL, type Episode } from '../data/coevolution';
+import { TELEGRAM } from '../i18n';
+
+const order = { pub: 0, soon: 1, plan: 2 } as const;
+const items = [...EPISODES].sort((a, b) => order[a.status] - order[b.status] || (b.date || '').localeCompare(a.date || ''));
+const count = (k: 'themes' | 'tags') => {
+  const m = new Map<string, number>();
+  EPISODES.forEach((e) => e[k].forEach((t) => m.set(t, (m.get(t) || 0) + 1)));
+  return [...m.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ru'));
+};
+const themes = count('themes');
+const tags = count('tags');
+const fmt = (d: string) => new Date(d + 'T00:00:00').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+const hay = (e: Episode) => [e.title, e.summary, e.hosts || '', ...e.themes, ...e.tags, ...e.materials.map((m) => m.title), ...(e.refs || [])].join(' ').toLowerCase();
+const bm = { pub: '', soon: 'gold', plan: 'amber' } as const;
+const pubCount = EPISODES.filter((e) => e.status === 'pub').length;
+
+const series = {
+  '@context': 'https://schema.org',
+  '@type': 'PodcastSeries',
+  name: 'Кто кого образует · We Form Each Other',
+  alternateName: 'Who Forms Whom',
+  description: 'Подкаст о ко-эволюции людей и ИИ: как в эпоху ИИ учить детей, учиться самому и учить своих ИИ-агентов.',
+  url: 'https://parmenides.academy/coevolution',
+  inLanguage: 'ru',
+  sameAs: [CHANNEL],
+  author: [{ '@type': 'Person', name: 'Тимур Атнашев' }, { '@type': 'Person', name: 'Кирилл Кринкин' }],
+};
+const eps = EPISODES.filter((e) => e.status === 'pub').map((e) => ({
+  '@context': 'https://schema.org',
+  '@type': 'PodcastEpisode',
+  name: e.title,
+  episodeNumber: e.n,
+  datePublished: e.date,
+  description: e.summary,
+  url: `https://parmenides.academy/coevolution#${e.slug}`,
+  partOfSeries: { '@type': 'PodcastSeries', name: series.name, url: series.url },
+  associatedMedia: e.materials.filter((m) => m.kind === 'Видео' && m.url).map((m) => ({ '@type': 'VideoObject', name: e.title, contentUrl: m.url, uploadDate: e.date })),
+}));
+---
+<Base
+  title="Коэволюция — подкаст «Кто кого образует»: образование людей и ИИ-агентов"
+  description="Подкаст Тимура Атнашева и Кирилла Кринкина о ко-эволюции людей и ИИ: как в эпоху ИИ учить детей, учиться самому и учить своих ИИ-агентов. Выпуски, фрагменты, главы и материалы к ним."
+  path="/coevolution"
+  wide
+  jsonld={[series, ...eps]}
+>
+  <section class="cover">
+    <span class="kick">Коэволюция · подкаст</span>
+    <h1>Кто кого образует</h1>
+    <p class="sub">We Form Each Other — ко-эволюция людей и ИИ</p>
+    <span class="orn">❈</span>
+    <p class="formula">Просто о сложном: как в эпоху ИИ учить детей, учиться самому и учить своих ИИ-агентов.</p>
+    <p class="mut">{HOSTS.join(' · ')}</p>
+    <p class="actions">
+      <a class="btn" href={CHANNEL} target="_blank" rel="noopener">Канал на YouTube</a>
+      <a class="btn ghost" href={TELEGRAM} target="_blank" rel="noopener">Предложить тему</a>
+    </p>
+  </section>
+
+  <p>Одна ось с двумя полюсами: <em>образование человека</em> в эпоху ИИ и <em>образование ИИ-агентов</em> — их архитектура, этика, жизнь в популяциях. Мы образуем друг друга.</p>
+  <p class="mut">Рабочая карта идей, из которых растут выпуски: <a href="/coevolution/gipotezy">дерево гипотез проекта</a>.</p>
+  <p class="mut">Вышло выпусков: {pubCount}. Здесь же — что готовится и какие темы в плане. Ищите по слову, дате выхода, теме или тегу; тег на карточке тоже работает как фильтр.</p>
+
+  <section class="filters" aria-label="Поиск и фильтры">
+    <div class="frow">
+      <label>Поиск<input id="cv-q" type="search" placeholder="слово в названии, описании, тегах" /></label>
+      <label>Вышел с<input id="cv-from" type="month" /></label>
+      <label>по<input id="cv-to" type="month" /></label>
+      <label>Статус
+        <select id="cv-status">
+          <option value="all">все</option>
+          <option value="pub">вышли</option>
+          <option value="soon">скоро</option>
+          <option value="plan">в плане</option>
+        </select>
+      </label>
+      <button class="btn ghost" id="cv-reset" type="button">Сбросить</button>
+    </div>
+    <div class="fgroup"><span class="cap">Темы</span>
+      <div class="chips" id="cv-themes">{themes.map(([t, n]) => <button type="button" class="chip" data-k="themes" data-v={t} aria-pressed="false">{t} · {n}</button>)}</div>
+    </div>
+    <details class="fgroup"><summary class="cap">Теги</summary>
+      <div class="chips" id="cv-tags">{tags.map(([t, n]) => <button type="button" class="chip" data-k="tags" data-v={t} aria-pressed="false">#{t}{n > 1 ? ` · ${n}` : ''}</button>)}</div>
+    </details>
+  </section>
+
+  <p class="cap" id="cv-count" aria-live="polite">Показано: {EPISODES.length} из {EPISODES.length}</p>
+
+  <div id="cv-list">
+    {items.map((e) => (
+      <article
+        class="card ep"
+        id={e.slug}
+        data-status={e.status}
+        data-month={e.date ? e.date.slice(0, 7) : ''}
+        data-themes={JSON.stringify(e.themes)}
+        data-tags={JSON.stringify(e.tags)}
+        data-hay={hay(e)}
+      >
+        <span class:list={['bookmark', bm[e.status]]}>{STATUS_LABEL[e.status]}</span>
+        <p class="meta">
+          {e.n && <span>Выпуск {e.n}</span>}
+          {e.date && <time datetime={e.date}>{fmt(e.date)}</time>}
+          {e.hosts && <span>{e.hosts}</span>}
+        </p>
+        <h3>{e.materials[0]?.url && e.status === 'pub' ? <a href={e.materials[0].url} target="_blank" rel="noopener">{e.title}</a> : e.title}</h3>
+        <p class="ann">{e.summary}</p>
+        <p class="tagline">
+          {e.themes.map((t) => <button type="button" class="tag th" data-k="themes" data-v={t}>{t}</button>)}
+          {e.tags.map((t) => <button type="button" class="tag" data-k="tags" data-v={t}>#{t}</button>)}
+        </p>
+        {e.materials.length > 0 && (
+          <details open={e.status === 'pub'}>
+            <summary>Материалы ({e.materials.length})</summary>
+            <ul class="mat">
+              {e.materials.map((m) => (
+                <li><span class="kind">{m.kind}</span><span>{m.url ? <a href={m.url} target="_blank" rel="noopener">{m.title}</a> : m.title}{m.note && <span class="mut"> ({m.note})</span>}</span></li>
+              ))}
+            </ul>
+          </details>
+        )}
+        {e.chapters && (
+          <details>
+            <summary>Главы</summary>
+            <ul class="chapters">{e.chapters.map(([t, h]) => <li><span>{t}</span>{h}</li>)}</ul>
+          </details>
+        )}
+        {e.refs && (
+          <details>
+            <summary>Упомянуто в разговоре</summary>
+            <ul class="refs">{e.refs.map((r) => <li>{r}</li>)}</ul>
+          </details>
+        )}
+        {e.status !== 'pub' && e.materials.length === 0 && <p class="mut small">{e.status === 'soon' ? 'Запись смонтирована; ссылки появятся в день выхода.' : 'Тема в плане; материалы появятся к выходу.'}</p>}
+      </article>
+    ))}
+  </div>
+  <p class="empty" id="cv-empty" hidden>Ничего не найдено. Снимите часть фильтров или нажмите «Сбросить».</p>
+
+  <span class="orn">❈</span>
+  <p class="mut">Расскажите, как вы обращаетесь со своими ИИ: контролируете, доверяете, договариваетесь? Мы читаем эти истории и берём их в следующие выпуски — пишите в комментариях на YouTube или <a href={TELEGRAM} target="_blank" rel="noopener">Тимуру в Telegram</a>.</p>
+</Base>
+
+<style>
+  .filters { border: 1px solid var(--line); background: var(--paper-2); padding: 16px 18px; margin: 1.6em 0 1em; display: flex; flex-direction: column; gap: 12px; }
+  .frow { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+  .filters label { display: flex; flex-direction: column; gap: 4px; font-variant: small-caps; letter-spacing: .14em; font-size: .78rem; color: var(--soft); }
+  .filters input, .filters select { font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 2px; padding: 6px 9px; min-width: 0; font-variant: normal; letter-spacing: 0; }
+  .filters input[type='search'] { width: min(100%, 320px); }
+  .filters .btn { padding: 6px 16px 7px; }
+  .fgroup { display: flex; flex-direction: column; gap: 6px; }
+  .fgroup summary { cursor: pointer; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip, .tag { font: inherit; font-size: .88rem; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 2px; padding: 2px 10px; cursor: pointer; }
+  .chip:hover, .tag:hover { border-color: var(--gold); color: var(--gold); }
+  .chip[aria-pressed='true'] { background: var(--green); border-color: var(--green); color: var(--paper); }
+  .tag { font-size: .8rem; padding: 1px 7px; color: var(--soft); }
+  .tag.th { font-variant: small-caps; letter-spacing: .1em; }
+  .tagline { display: flex; flex-wrap: wrap; gap: 5px; margin: .2em 0 .6em; max-width: none; }
+  .ep .meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0 0 .3em; max-width: none; }
+  .ep details { border-top: 1px solid var(--line); padding-top: 8px; margin-top: 8px; }
+  .ep summary { cursor: pointer; font-variant: small-caps; letter-spacing: .14em; font-size: .85rem; color: var(--green); }
+  .mat { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 5px; }
+  .mat li { display: grid; grid-template-columns: 90px 1fr; gap: 8px; max-width: none; }
+  .mat .kind { font-variant: small-caps; letter-spacing: .12em; font-size: .8rem; color: var(--gold); padding-top: 2px; }
+  .chapters { list-style: none; padding: 0; margin: 8px 0 0; columns: 2 280px; font-size: .95rem; }
+  .chapters li { break-inside: avoid; }
+  .chapters span { display: inline-block; min-width: 60px; color: var(--soft); font-variant-numeric: tabular-nums; }
+  .refs { margin: 8px 0 0; padding-left: 1.2em; font-size: .95rem; }
+  .small { font-size: .9rem; margin: .6em 0 0; }
+  .empty { text-align: center; color: var(--soft); border: 1px dashed var(--line); padding: 20px; }
+  @media (max-width: 640px) {
+    .card.ep { padding-left: 52px; padding-right: 16px; }
+    .mat li { grid-template-columns: 1fr; gap: 0; }
+  }
+</style>
+
+<script>
+  const $ = (id: string) => document.getElementById(id)!;
+  const st = { q: '', from: '', to: '', status: 'all', themes: new Set<string>(), tags: new Set<string>() };
+  const cards = [...document.querySelectorAll<HTMLElement>('#cv-list .ep')];
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.filters .chip')];
+
+  function match(c: HTMLElement) {
+    if (st.status !== 'all' && c.dataset.status !== st.status) return false;
+    const m = c.dataset.month || '';
+    if (st.from || st.to) {
+      if (!m) return false;
+      if (st.from && m < st.from) return false;
+      if (st.to && m > st.to) return false;
+    }
+    const th: string[] = JSON.parse(c.dataset.themes || '[]');
+    const tg: string[] = JSON.parse(c.dataset.tags || '[]');
+    for (const t of st.themes) if (!th.includes(t)) return false;
+    for (const t of st.tags) if (!tg.includes(t)) return false;
+    if (st.q) {
+      const hay = c.dataset.hay || '';
+      if (!st.q.toLowerCase().split(/\s+/).filter(Boolean).every((w) => hay.includes(w))) return false;
+    }
+    return true;
+  }
+  function render() {
+    let n = 0;
+    cards.forEach((c) => { const ok = match(c); c.hidden = !ok; if (ok) n++; });
+    chips.forEach((b) => b.setAttribute('aria-pressed', String((st as any)[b.dataset.k!].has(b.dataset.v))));
+    $('cv-count').textContent = `Показано: ${n} из ${cards.length}`;
+    $('cv-empty').hidden = n > 0;
+  }
+  function toggle(k: string, v: string) {
+    const s: Set<string> = (st as any)[k];
+    s.has(v) ? s.delete(v) : s.add(v);
+    if (k === 'tags' && s.size) { const d = document.querySelector<HTMLDetailsElement>('details.fgroup'); if (d) d.open = true; }
+    render();
+  }
+  $('cv-q').addEventListener('input', (e) => { st.q = (e.target as HTMLInputElement).value; render(); });
+  $('cv-from').addEventListener('change', (e) => { st.from = (e.target as HTMLInputElement).value; render(); });
+  $('cv-to').addEventListener('change', (e) => { st.to = (e.target as HTMLInputElement).value; render(); });
+  $('cv-status').addEventListener('change', (e) => { st.status = (e.target as HTMLSelectElement).value; render(); });
+  document.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('.chip, .tag');
+    if (b && b.dataset.k && b.dataset.v) toggle(b.dataset.k, b.dataset.v);
+  });
+  $('cv-reset').addEventListener('click', () => {
+    st.q = st.from = st.to = ''; st.status = 'all'; st.themes.clear(); st.tags.clear();
+    (['cv-q', 'cv-from', 'cv-to'] as const).forEach((id) => (($(id) as HTMLInputElement).value = ''));
+    ($('cv-status') as HTMLSelectElement).value = 'all';
+    render();
+  });
+</script>

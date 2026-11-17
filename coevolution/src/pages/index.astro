@@ -20,8 +20,8 @@ const latest = pub[0];
 
 // поле понятий: слова, вокруг которых идут разговоры; цвет — у немногих
 const WORDS: [string, string?][] = [
-  ['Опыт'], ['Усилие', 't'], ['Учитель'], ['Агент'], ['Признание', 'c'], ['Популяция'], ['Понимание'], ['Интеллект', 't'],
-  ['Ученик'], ['Доверие'], ['Контроль', 'c'], ['Эволюция'], ['Образование'], ['Мотивация'], ['Язык'], ['Модель', 't'],
+  ['Опыт'], ['Усилие', 't'], ['Учитель'], ['Агент', 'b'], ['Признание', 'c'], ['Популяция'], ['Понимание'], ['Интеллект', 't'],
+  ['Ученик'], ['Доверие', 'b'], ['Контроль', 'c'], ['Эволюция'], ['Образование'], ['Мотивация'], ['Язык', 'b'], ['Модель', 't'],
 ];
 const frac = (n: number) => { const v = Math.sin(n * 12.9898) * 43758.5453; return v - Math.floor(v); }; // детерминированный «случай»
 const field = Array.from({ length: 30 }, (_, i) => {
@@ -173,28 +173,31 @@ const eps = pub.map((e) => ({
   .intro .hosts { grid-column: 1 / span 3; display: flex; flex-direction: column; gap: 2px; align-self: end; }
   .intro .cta { grid-column: 4 / span 3; display: flex; flex-wrap: wrap; gap: 10px; }
   .btn { display: inline-block; padding: 11px 18px; background: var(--ink); color: var(--bg); text-decoration: none; font-weight: 500; font-size: .92rem; border: 1px solid var(--ink); }
-  .btn:hover { background: var(--teal); border-color: var(--teal); color: #fff; }
+  .btn { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn:hover { background: var(--coral); border-color: var(--coral); color: #fff; }
   .btn.ghost { background: transparent; color: var(--ink); }
-  .btn.ghost:hover { background: var(--ink); color: var(--bg); }
+  .btn.ghost { border-color: var(--ink); }
+  .btn.ghost:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 
   /* поле понятий: тёмная полоса, слова плывут в перспективе */
-  .field { position: relative; background: #0F0F0F; color: #EDEDED; overflow: hidden; }
+  .field { position: relative; background: linear-gradient(115deg, var(--teal) 0%, #0A9A7A 38%, #1238FF 100%); color: #fff; overflow: hidden; }
   .stage { position: relative; height: min(62vh, 560px); perspective: 900px; perspective-origin: 50% 30%; }
-  .stage::before { content: ''; position: absolute; inset: -20%; background-image: linear-gradient(#ffffff10 1px, transparent 1px), linear-gradient(90deg, #ffffff10 1px, transparent 1px); background-size: 90px 90px; transform: rotateX(58deg) translateY(-8%); transform-origin: 50% 0; }
-  .fw { position: absolute; left: var(--x); top: var(--y); font-size: calc(1.05rem * var(--s)); font-weight: 400; letter-spacing: -.01em; white-space: nowrap; color: #8d8d8d; transform: translateZ(var(--z)) rotateX(18deg) rotateZ(-8deg); animation: drift var(--d) linear var(--dl) infinite alternate; }
-  .fw.t { color: var(--teal-l); }
-  .fw.c { color: var(--coral); }
+  .stage::before { content: ''; position: absolute; inset: -20%; background-image: linear-gradient(#ffffff2e 1px, transparent 1px), linear-gradient(90deg, #ffffff2e 1px, transparent 1px); background-size: 90px 90px; transform: rotateX(58deg) translateY(-8%); transform-origin: 50% 0; }
+  .fw { position: absolute; left: var(--x); top: var(--y); font-size: calc(1.05rem * var(--s)); font-weight: 400; letter-spacing: -.01em; white-space: nowrap; color: #ffffffa6; transform: translateZ(var(--z)) rotateX(18deg) rotateZ(-8deg); animation: drift var(--d) linear var(--dl) infinite alternate; }
+  .fw.t { color: #fff; font-weight: 600; }
+  .fw.b { color: #fff; font-weight: 600; }
+  .fw.c { color: #FFE36E; font-weight: 600; }
   @keyframes drift { from { transform: translateZ(var(--z)) rotateX(18deg) rotateZ(-8deg) translate3d(-30px, 0, 0); } to { transform: translateZ(var(--z)) rotateX(18deg) rotateZ(-8deg) translate3d(30px, -14px, 60px); } }
   @media (prefers-reduced-motion: reduce) { .fw { animation: none; } }
-  .fcap { position: relative; padding-top: 14px; padding-bottom: 14px; border-top: 1px solid #2a2a2a; font-size: .82rem; color: #bdbdbd; }
-  .fcap span:first-child { grid-column: span 3; font-weight: 500; color: #fff; }
+  .fcap { position: relative; padding-top: 14px; padding-bottom: 14px; border-top: 1px solid var(--line); font-size: .82rem; color: var(--soft); background: var(--bg); }
+  .fcap span:first-child { grid-column: span 3; font-weight: 600; color: var(--coral); }
   .fcap .r { grid-column: span 3; text-align: right; }
 
   .latest { padding-top: 56px; padding-bottom: 10px; row-gap: 10px; }
-  .latest .lab { grid-column: 1 / span 2; color: var(--teal); padding-top: 8px; }
+  .latest .lab { grid-column: 1 / span 2; color: var(--coral); padding-top: 8px; font-weight: 600; }
   .latest h2 { grid-column: 3 / span 4; font-size: clamp(1.7rem, 3.4vw, 3.1rem); line-height: 1.05; font-weight: 500; }
   .latest h2 a { text-decoration: none; }
-  .latest h2 a:hover { color: var(--teal); }
+  .latest h2 a:hover { color: var(--blue); }
   .latest .ann { grid-column: 3 / span 3; color: var(--soft); }
 
   .cat { margin-top: 70px; }
@@ -206,7 +209,7 @@ const eps = pub.map((e) => ({
   .filters label { display: flex; flex-direction: column; gap: 4px; }
   .filters .q { grid-column: span 2; }
   .filters input, .filters select { font: inherit; font-size: .95rem; color: var(--ink); background: #FAFAF8; border: 1px solid var(--line); border-radius: 0; padding: 8px 10px; width: 100%; min-width: 0; }
-  .filters input:focus, .filters select:focus { border-color: var(--teal); outline: none; }
+  .filters input:focus, .filters select:focus { border-color: var(--blue); outline: none; }
   .reset { font: inherit; font-size: .88rem; background: none; border: 0; border-bottom: 1px solid var(--ink); padding: 6px 0; cursor: pointer; justify-self: start; }
   .reset:hover { color: var(--coral); border-color: var(--coral); }
   .chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
@@ -214,8 +217,8 @@ const eps = pub.map((e) => ({
   details.chips summary { cursor: pointer; width: 100%; margin-bottom: 4px; }
   .chip, .tag { font: inherit; font-size: .84rem; background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; cursor: pointer; }
   .chip i { font-style: normal; color: var(--soft); margin-left: 3px; font-size: .78rem; }
-  .chip:hover, .tag:hover { border-color: var(--teal); color: var(--teal); }
-  .chip[aria-pressed='true'] { background: var(--teal); border-color: var(--teal); color: #fff; }
+  .chip:hover, .tag:hover { border-color: var(--blue); color: var(--blue); }
+  .chip[aria-pressed='true'] { background: var(--blue); border-color: var(--blue); color: #fff; }
   .chip[aria-pressed='true'] i { color: #e6fffa; }
   .cnt { padding-top: 10px; padding-bottom: 6px; }
 
@@ -224,9 +227,9 @@ const eps = pub.map((e) => ({
   .ep .num { grid-column: span 1; font-size: clamp(2rem, 4vw, 3.6rem); font-weight: 300; line-height: .9; letter-spacing: -.04em; color: var(--ink); }
   .ep.soon .num, .ep.plan .num { color: var(--line); }
   .ep .when { grid-column: span 1; display: flex; flex-direction: column; gap: 6px; font-size: .82rem; color: var(--soft); padding-right: 12px; }
-  .st { align-self: start; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--teal-t); color: #08705f; }
-  .soon .st { background: var(--coral-t); color: #b8371a; }
-  .plan .st { background: transparent; color: var(--soft); border: 1px solid var(--line); }
+  .st { align-self: start; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; background: var(--teal); color: #fff; font-weight: 600; }
+  .soon .st { background: var(--coral); color: #fff; }
+  .plan .st { background: var(--blue-t); color: var(--blue); }
   .ep .body { grid-column: 3 / span 4; display: flex; flex-direction: column; gap: 8px; }
   .ep h3 { font-size: clamp(1.25rem, 2vw, 1.7rem); line-height: 1.15; font-weight: 500; }
   .ep h3 a { text-decoration: none; }
@@ -236,17 +239,18 @@ const eps = pub.map((e) => ({
   .tag { font-size: .76rem; padding: 1px 9px; color: var(--soft); }
   .tag.th { color: var(--ink); border-color: #b9b9b5; }
   .ep details { border-top: 1px solid var(--line); padding-top: 8px; }
-  .ep summary { cursor: pointer; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--teal); font-weight: 600; }
+  .ep summary { cursor: pointer; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); font-weight: 600; }
   .ep summary:hover { color: var(--coral); }
   .mat, .chap { list-style: none; padding: 0; margin: 10px 0 2px; columns: 2 300px; column-gap: 28px; font-size: .92rem; }
   .mat li, .chap li { break-inside: avoid; padding: 3px 0; display: flex; gap: 10px; }
   .mat .k { flex: none; width: 70px; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--soft); padding-top: 3px; }
   .mat a { text-decoration: none; border-bottom: 1px solid var(--line); }
-  .mat a:hover { border-color: var(--teal); }
+  .mat a:hover { border-color: var(--blue); }
   .chap span { flex: none; width: 58px; color: var(--soft); font-variant-numeric: tabular-nums; }
   .refs { margin: 8px 0 0; padding-left: 1.1em; font-size: .92rem; }
   .note { font-style: italic; }
   .empty { padding: 28px 20px; color: var(--soft); }
+  .empty[hidden] { display: none; }
   .empty span { grid-column: 3 / span 4; }
 
   .about { margin-top: 90px; }
@@ -254,7 +258,7 @@ const eps = pub.map((e) => ({
   .about .lab { grid-column: span 2; }
   .about .ab { grid-column: 3 / span 4; display: flex; flex-direction: column; gap: 16px; }
   .about .big { font-size: clamp(1.4rem, 2.4vw, 2.1rem); line-height: 1.15; }
-  .about em { font-style: normal; color: var(--teal); }
+  .about em { font-style: normal; color: var(--blue); }
   .about .who { display: flex; flex-direction: column; font-size: .9rem; color: var(--soft); }
   .about .ask { padding: 14px 16px; background: var(--coral-t); border-left: 3px solid var(--coral); }
   .arrow { font-weight: 500; text-decoration: none; border-bottom: 1px solid var(--ink); align-self: start; }
@@ -275,7 +279,7 @@ const eps = pub.map((e) => ({
     .about .lab { margin-bottom: 10px; }
     .stage { height: 38vh; }
     .fw { font-size: calc(.8rem * var(--s)); }
-    .fw:nth-child(n+19) { display: none; }
+    .fw:nth-child(3n+2) { display: none; }
   }
 </style>
 

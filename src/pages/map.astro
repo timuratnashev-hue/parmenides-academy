@@ -38,16 +38,16 @@ const slug = slugify;
       <span><i class="dot D"></i><b>работает с текстом диалога</b> — есть место, где автор разбирает «Парменид»</span>
       <span><i class="dot M"></i><b>через посредника</b> — канал установлен и назван</span>
     </p>
-    <p class="tree"><a href="/img/tree_paper.svg?v=62" target="_blank">Дерево филиаций — радиальная схема (SVG)</a></p>
+    <p class="tree"><a href="/img/tree_paper.svg?v=63" target="_blank">Дерево филиаций — радиальная схема (SVG)</a></p>
   </header>
 
   <section class="wheel" id="wheel" hidden>
     <div class="wtools">
       <button type="button" id="wzoom" aria-pressed="false">Крупнее</button>
-      <a href="/img/tree_paper.svg?v=62" target="_blank" rel="noopener">Открыть отдельно</a>
+      <a href="/img/tree_paper.svg?v=63" target="_blank" rel="noopener">Открыть отдельно</a>
       <span class="whint">Радиус — время, сектор — ветвь; та же карта, что лентой.</span>
     </div>
-    <div class="wbox" id="wbox"><img src="/img/tree_paper.svg?v=62" alt="Колесо филиаций «Парменида»: 62 узла в 12 ветвях вокруг диалога, радиус — время" width="2100" height="2100" loading="lazy" /></div>
+    <div class="wbox" id="wbox"><div id="wsvg" role="img" aria-label="Колесо филиаций «Парменида»: 62 узла в 12 ветвях вокруг диалога, радиус — время. Имена — ссылки на карточки."><p class="wload">Загружаю колесо…</p></div></div>
   </section>
 
   <div id="listView">
@@ -107,8 +107,20 @@ const slug = slugify;
     vbtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
     history.replaceState(null, '', w ? '#koleso' : location.pathname);
   };
-  vbtns.forEach((b) => b.addEventListener('click', () => setView(b.dataset.v!)));
-  if (location.hash === '#koleso') setView('wheel');
+  // колесо встраивается в страницу (а не <img>), чтобы имена были ссылками на карточки /map/<slug>
+  let wLoaded = false;
+  const loadWheel = async () => {
+    if (wLoaded) return; wLoaded = true;
+    const box = document.getElementById('wsvg') as HTMLElement;
+    try {
+      const txt = await (await fetch('/img/tree_paper.svg?v=63')).text();
+      box.innerHTML = txt.slice(txt.indexOf('<svg'));
+      const svg = box.querySelector('svg');
+      if (svg) { svg.removeAttribute('width'); svg.removeAttribute('height'); svg.querySelectorAll('a').forEach((a) => a.removeAttribute('target')); }
+    } catch { box.innerHTML = '<p class="wload"><a href="/img/tree_paper.svg?v=63">Открыть колесо отдельно</a></p>'; }
+  };
+  vbtns.forEach((b) => b.addEventListener('click', () => { setView(b.dataset.v!); if (b.dataset.v === 'wheel') loadWheel(); }));
+  if (location.hash === '#koleso') { setView('wheel'); loadWheel(); }
   const wz = document.getElementById('wzoom') as HTMLButtonElement;
   const wbox = document.getElementById('wbox') as HTMLElement;
   wz.addEventListener('click', () => {
@@ -206,8 +218,10 @@ const slug = slugify;
   .wtools button[aria-pressed='true'] { background: var(--green); color: var(--paper); border-color: var(--green); }
   .whint { font-style: italic; color: var(--soft); font-size: .92rem; }
   .wbox { border: 1px solid var(--gold); outline: 1px solid var(--gold-2); outline-offset: 4px; background: var(--paper); overflow: auto; max-height: 82vh; -webkit-overflow-scrolling: touch; }
-  .wbox img { display: block; width: 100%; height: auto; }
-  .wbox.big img { width: 2100px; max-width: none; }
+  .wbox :global(svg) { display: block; width: 100%; height: auto; }
+  .wbox.big :global(svg) { width: 2100px; max-width: none; }
+  .wbox :global(a) { text-decoration: none; }
+  :global(.wload) { margin: 0; padding: 40px 16px; text-align: center; font-style: italic; color: var(--soft); }
 
   @media (max-width: 720px) {
     .rootlinks { font-size: 15px; }

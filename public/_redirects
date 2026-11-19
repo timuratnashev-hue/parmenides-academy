@@ -1,3 +1,12 @@
 # Пусто намеренно. Постоянные ссылки на разделы Стефануса — настоящие страницы
 # (/parmenid/137c), а не редиректы: 201 правило здесь заставляло загрузчик
 # Cloudflare Pages считать файлы бесконечно долго.
+
+# 18.11.2026: раздел «Коэволюция» переехал на поддомен (отдельный Pages-проект coevolution, корень coevolution/).
+/coevolution https://coevolution.parmenides.academy/ 301
+/coevolution/ https://coevolution.parmenides.academy/ 301
+/coevolution/* https://coevolution.parmenides.academy/:splat 301
+/en/coevolution https://coevolution.parmenides.academy/ 301
+/en/coevolution/ https://coevolution.parmenides.academy/ 301
+/fr/coevolution https://coevolution.parmenides.academy/ 301
+/fr/coevolution/ https://coevolution.parmenides.academy/ 301

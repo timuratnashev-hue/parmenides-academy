@@ -19,7 +19,7 @@
 - [Материалы — библиотека](https://parmenides.academy/materials)
 - [Платон и «Парменид» в сети: внешние ресурсы — семинары, тексты, справочники, общества](https://parmenides.academy/resursy)
 - [Тимур Атнашев — портфолио](https://parmenides.academy/portfolio)
-- [Коэволюция — подкаст «Кто кого образует» (Тимур Атнашев, Кирилл Кринкин): образование людей и ИИ-агентов; выпуски, фрагменты, главы](https://parmenides.academy/coevolution)
+- [Коэволюция — подкаст «Кто кого образует» (Тимур Атнашев, Кирилл Кринкин): образование людей и ИИ-агентов; выпуски, фрагменты, главы](https://coevolution.parmenides.academy/)
 
 ## Как ссылаться
 - На место в диалоге: Платон. Парменид, 137c // Parmenides Academy. URL: https://parmenides.academy/parmenid/137c

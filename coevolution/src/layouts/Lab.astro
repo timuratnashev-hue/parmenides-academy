@@ -36,17 +36,17 @@ const ld = Array.isArray(jsonld) ? jsonld : jsonld ? [jsonld] : [];
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#F0F0F0" />
+    <meta name="theme-color" content="#F3F7F5" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,800;1,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Unbounded:wght@500;700;800&display=swap" rel="stylesheet" />
     {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
   </head>
   <body>
     {hero && (
       <a class="mark" href="/" aria-label="Коэволюция — на главную">
-        <svg viewBox="0 0 1000 122" role="img" aria-hidden="true"><text x="0" y="92" textLength="1000" lengthAdjust="spacing">КОЭВОЛЮЦИЯ</text></svg>
+        <svg viewBox="0 0 1000 150" role="img" aria-hidden="true"><text x="0" y="118" font-size="140" textLength="1000" lengthAdjust="spacingAndGlyphs">КОЭВОЛЮЦИЯ</text></svg>
       </a>
     )}
     <header class="top">
@@ -90,30 +90,41 @@ const ld = Array.isArray(jsonld) ? jsonld : jsonld ? [jsonld] : [];
 </html>
 
 <style is:global>
+  /* Палитра и шрифты — из исходного артефакта «Дерево гипотез» (claude/site/coevolution/gipotezy.astro), решение Тимура 19.11.2026 */
   :root {
-    --bg: #F0F0F0; --bg-2: #E6E6E4; --ink: #0F0F0F; --soft: #5C5C5C; --line: #CFCFCB;
-    --teal: #00B34D; --teal-l: #00D45A; --teal-t: #00B34D; --coral: #FF4F2B; --coral-t: #FFE1D8; --blue: #1238FF; --blue-t: #D3DBFF;
-    --sans: 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --bg: #F3F7F5; --paper-2: #FFFFFF; --ink: #0A1F1A; --soft: #51635C; --line: #CFDBD6; --grid: rgba(10,31,26,.055);
+    --green: #00A562; --blue: #1450F0; --green-soft: #D9F3E6; --blue-soft: #DFE8FE; --on-band: #FFFFFF; --field: #A35E00;
+    /* старые имена в разметке → цвета артефакта */
+    --teal: var(--green); --teal-l: var(--green); --teal-t: var(--green-soft); --coral: var(--blue); --coral-t: var(--blue-soft); --blue-t: var(--blue-soft);
+    --display: 'Unbounded', 'Golos Text', system-ui, sans-serif;
+    --sans: 'Golos Text', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
     --cols: repeat(6, minmax(0, 1fr));
-    /* совместимость со страницами, написанными под Parmenides Academy (дерево гипотез) */
-    --paper: var(--bg); --paper-2: #FAFAF8; --green: var(--teal); --gold: var(--coral); --gold-2: var(--line); --amber: var(--coral);
-    --display: var(--sans); --serif: var(--sans);
+    --paper: var(--bg); --gold: var(--blue); --gold-2: var(--line); --amber: var(--field); --serif: var(--sans);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0B1512; --paper-2: #111E1A; --ink: #E8F1ED; --soft: #93A7A0; --line: #263832; --grid: rgba(232,241,237,.05);
+      --green: #1FD08A; --blue: #6F97FF; --green-soft: #12362A; --blue-soft: #1A2850; --on-band: #04130E; --field: #E7AB55;
+      color-scheme: dark;
+    }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.5 var(--sans); }
+  body { margin: 0; background-color: var(--bg); color: var(--ink); font: 400 16px/1.5 var(--sans);
+    background-image: repeating-linear-gradient(90deg, var(--grid) 0 1px, transparent 1px calc(100% / 12)); background-size: calc(100% - 40px) 100%; background-position: 20px 0; background-repeat: no-repeat; }
   a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
   a:hover { color: var(--blue); }
   :focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
-  h1, h2, h3 { font-weight: 400; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+  h1, h2, h3 { font-weight: 500; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
   p { margin: 0; }
   .grid { display: grid; grid-template-columns: var(--cols); column-gap: 0; padding: 0 20px; }
-  .lab { display: block; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+  .lab { display: block; font-family: var(--mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
 
   /* словесный знак во всю ширину */
   .mark { display: block; padding: 6px 20px 0; color: var(--ink); text-decoration: none; }
   .mark svg { display: block; width: 100%; height: auto; overflow: visible; }
-  .mark text { font-family: var(--sans); font-weight: 800; font-size: 124px; fill: currentColor; }
+  .mark text { font-family: var(--display); font-weight: 800; fill: currentColor; }
   .mark:hover { color: var(--ink); }
 
   /* меню по колонкам, с засечками сетки */
@@ -144,7 +155,7 @@ const ld = Array.isArray(jsonld) ? jsonld : jsonld ? [jsonld] : [];
   .gtwrap h3 { font-weight: 600; }
   .wrap { padding: 0 20px; }
 
-  .foot { margin-top: 90px; border-top: 3px solid var(--blue); background: var(--bg); }
+  .foot { margin-top: 90px; border-top: 3px solid var(--blue); border-image: linear-gradient(100deg, var(--green), var(--blue)) 1; background: var(--bg); }
   .fg { padding-top: 22px; padding-bottom: 26px; row-gap: 22px; }
   .fcol { display: flex; flex-direction: column; gap: 4px; padding-right: 16px; font-size: .92rem; }
   .fcol:first-child { grid-column: span 2; }
@@ -163,7 +174,7 @@ const ld = Array.isArray(jsonld) ? jsonld : jsonld ? [jsonld] : [];
     .nav .plus .nm { display: none; }
     .nav > a.ni { padding: 12px 9px; white-space: nowrap; }
     .nav > a.ni[target] { display: none; }
-    .nav > a.window { margin-left: auto; padding: 6px 12px; }
+    .nav > a.window { margin-left: auto; padding: 6px 10px; white-space: nowrap; flex: none; }
     .nav .window .wk { display: none; }
     .nav .window .wt { font-size: .76rem; }
     .fcol:first-child, .window.big { grid-column: span 2; }

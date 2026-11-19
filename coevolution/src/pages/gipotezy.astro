@@ -1,36 +1,223 @@
 ---
-// Поддомен coevolution.parmenides.academy: дерево гипотез (перенесено из parmenides.academy/coevolution/gipotezy 18.11.2026) проекта «Когнитивная этика / The Recognition Wager» на 18.11.2026.
-// Данные лежат в скрипте внизу страницы; исходник — документы проекта (карта/Дерево_гипотез_2026-11-18.html).
-import Lab from '../layouts/Lab.astro';
+// Дерево гипотез — страница раздела «Коэволюция». Самостоятельная: свой head, стили и скрипт внутри, макет Lab.astro не используется.
+// Собрано 18.11.2026 из артефакта «Дерево гипотез» (версия 4). Данные — константы PREM, MOVES, C, M, H, NEW в скрипте ниже.
+// 19.11.2026: поставлено на поддомен (замена прежней страницы); кнопка Parmenides — в тоне основного сайта, как на остальных страницах поддомена.
 ---
-<Lab
-  title="Дерево гипотез — коэволюция людей и ИИ-агентов"
-  description="Рабочая карта проекта «Когнитивная этика / The Recognition Wager»: ядро, 21 гипотеза, узлы и карточки с тем, что каждую гипотезу поддерживает, сдвигает или оспаривает. Состояние на 18 ноября 2026."
-  path="/gipotezy"
->
-<div class="wrap gtwrap">
-  <nav class="crumbs gtc"><a href="/">Коэволюция</a> <span class="sep">·</span> <span>Дерево гипотез</span></nav>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Дерево гипотез — Коэволюция</title>
+<meta name="description" content="Ядро, гипотезы, узлы и карточки проекта о коэволюции людей и ИИ-агентов: 21 гипотеза, 10 узлов, 41 карточка. Состояние на 18 ноября 2026.">
+<link rel="canonical" href="https://coevolution.parmenides.academy/gipotezy">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Unbounded:wght@500;700;800&display=swap">
+<style is:global>
+html,body{margin:0}
+[hidden]{display:none!important}
+img{max-width:100%}
 
-  <span class="kick">Коэволюция · рабочая карта</span>
-  <h1>Дерево гипотез</h1>
-  <p class="sub">Проект «Когнитивная этика / The Recognition Wager». Ядро, гипотезы, узлы и карточки на 18 ноября 2026: одна фраза на гипотезу и одна на карточку.</p>
+/* Раскладка: лабораторный лист на сетке из 12 колонок. Сверху знак во всю ширину, под ним зелёно-синяя полоса с названием страницы и счётчиками; дальше ствол (коды гипотез) слева и ветви-карточки справа. */
+:root{
+  --paper:#F3F7F5; --sheet:#FFFFFF; --ink:#0A1F1A; --muted:#51635C; --line:#CFDBD6; --grid:rgba(10,31,26,.055);
+  --green:#00A562; --blue:#1450F0; --green-soft:#D9F3E6; --blue-soft:#DFE8FE; --on-band:#FFFFFF;
+  --plus:#008A50; --shift:#1450F0; --minus:#C2362B; --form:#00766F; --field:#A35E00; --mat:#51635C; --new:#1450F0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0B1512; --sheet:#111E1A; --ink:#E8F1ED; --muted:#93A7A0; --line:#263832; --grid:rgba(232,241,237,.05);
+    --green:#1FD08A; --blue:#6F97FF; --green-soft:#12362A; --blue-soft:#1A2850; --on-band:#04130E;
+    --plus:#3FD795; --shift:#86A8FF; --minus:#F08A80; --form:#4FD3C8; --field:#E7AB55; --mat:#93A7A0; --new:#86A8FF;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0B1512; --sheet:#111E1A; --ink:#E8F1ED; --muted:#93A7A0; --line:#263832; --grid:rgba(232,241,237,.05);
+  --green:#1FD08A; --blue:#6F97FF; --green-soft:#12362A; --blue-soft:#1A2850; --on-band:#04130E;
+  --plus:#3FD795; --shift:#86A8FF; --minus:#F08A80; --form:#4FD3C8; --field:#E7AB55; --mat:#93A7A0; --new:#86A8FF;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.page{max-width:1280px;margin:0 auto;padding-block:0 64px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  background-image:repeating-linear-gradient(90deg,var(--grid) 0 1px,transparent 1px calc(100%/12));background-size:calc(100% - 32px) 100%;background-position:16px 0;background-repeat:no-repeat}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
-  <div class="gt">
-  <div class="counts" id="counts"></div>
+/* шапка */
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;padding:14px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.top nav{display:flex;flex-wrap:wrap;gap:4px 18px}
+.top nav a{text-decoration:none;font-weight:500;color:var(--muted)}
+.top nav a:hover{color:var(--ink)}
+.top .here{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+/* кнопка основного сайта — в тоне Parmenides Academy (бумага, золото, вино), как на остальных страницах поддомена */
+.win{display:inline-flex;align-items:center;gap:6px;border:1px solid #A9782B;border-radius:3px;padding:6px 14px;text-decoration:none;font-weight:600;background:#F3E9D2;color:#7A2230;box-shadow:inset 0 0 0 3px #FBF6EA}
+.win:hover{background:#EBDCBC;border-color:#8A6326}
+.mark{display:block;width:100%;height:auto;margin:10px 0 6px}
+.mark text{font-family:var(--display);font-weight:800;fill:var(--ink)}
 
-  <h2 class="gt-h">Ядро: из чего растёт дерево</h2>
+/* полоса */
+.band{background:linear-gradient(100deg,var(--green) 0%,var(--blue) 100%);color:var(--on-band);border-radius:6px;padding:22px 24px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:18px 32px;align-items:end}
+.band h1{font-family:var(--display);font-weight:700;font-size:clamp(24px,3.6vw,40px);line-height:1.08;margin:0;text-wrap:balance}
+.band p{margin:8px 0 0;max-width:52ch;font-size:15px}
+.counts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid color-mix(in srgb,var(--on-band) 55%,transparent)}
+.count{padding:10px 12px 0 0;display:flex;flex-direction:column;gap:2px;min-width:0}
+.count b{font-family:var(--mono);font-weight:700;font-size:clamp(22px,3vw,34px);line-height:1;font-variant-numeric:tabular-nums}
+.count span{font-size:12.5px;line-height:1.3}
+
+h2{font-family:var(--display);font-weight:500;font-size:14px;letter-spacing:.06em;text-transform:uppercase;margin:44px 0 14px;display:flex;align-items:center;gap:12px}
+h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.lead{color:var(--muted);max-width:68ch;margin:-6px 0 14px}
+
+/* ядро */
+.core{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);background:var(--sheet);border-radius:6px}
+.core>div{padding:16px 18px;border-left:1px solid var(--line);min-width:0}
+.core>div:first-child{border-left:0}
+.core h3{margin:0 0 6px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--plus)}
+.core p{margin:0}
+.src{display:block;color:var(--muted);font-size:12.5px;margin-top:8px}
+.prem{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0 24px;margin-top:14px}
+.prem div{border-bottom:1px solid var(--line);padding:7px 0;font-size:14px;display:grid;grid-template-columns:34px 1fr;gap:6px}
+.prem b{font-family:var(--mono);color:var(--shift)}
+
+/* новые ходы */
+.moves{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:6px;background:var(--sheet)}
+.moves li{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:6px 16px;padding:10px 16px;border-top:1px solid var(--line);align-items:baseline}
+.moves li:first-child{border-top:0}
+.moves time,.cards time,.idx time{font-family:var(--mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.moves .to{font-family:var(--mono);font-size:11.5px;color:var(--shift);white-space:nowrap}
+.moves b{font-weight:600}
+.wait{margin:12px 0 0;padding:12px 16px;border:1px dashed var(--field);border-radius:6px;font-size:14px}
+.wait b{color:var(--field)}
+.wait ul{margin:6px 0 0;padding-left:18px}
+
+/* легенда и фильтр */
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:13px;color:var(--muted)}
+.legend .k{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:2px;display:inline-block;flex:none}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+.bar button{font:inherit;font-size:13.5px;font-weight:600;background:var(--sheet);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:6px 14px;cursor:pointer}
+.bar button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+
+/* дерево */
+.tree{position:relative}
+.tree::before{content:"";position:absolute;left:33px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--green),var(--blue))}
+.h{display:grid;grid-template-columns:68px minmax(0,1fr);gap:16px;padding:11px 0;position:relative}
+.code{position:relative;z-index:1;align-self:start;width:68px;text-align:center;font-family:var(--mono);font-weight:700;font-size:15px;padding:7px 0;border-radius:4px;background:var(--sheet);border:1.5px solid var(--line)}
+.h.node .code{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.h.cand .code{border-style:dashed;border-color:var(--field)}
+.h.node.cand .code{background:var(--field);border-color:var(--field);border-style:solid;color:var(--sheet)}
+.title{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.title strong{font-size:17px;font-weight:700}
+.chip{font-size:12px;font-weight:600;border-radius:3px;padding:1px 8px;border:1px solid var(--line);color:var(--muted)}
+.chip.s-ok{color:var(--plus);border-color:var(--plus)}
+.chip.s-shift{color:var(--shift);border-color:var(--shift)}
+.chip.s-q{color:var(--minus);border-color:var(--minus)}
+.chip.s-cand{color:var(--field);border-color:var(--field)}
+.chip.nodechip{background:var(--green-soft);border-color:transparent;color:var(--plus)}
+.chip.newchip{background:var(--blue-soft);border-color:transparent;color:var(--new)}
+.say{margin:3px 0 0;max-width:80ch}
+.now{margin:6px 0 0;font-size:14px;color:var(--muted);max-width:88ch}
+.now b{color:var(--ink);font-weight:600}
+.cards{list-style:none;margin:10px 0 2px;padding:0;border-left:2px solid var(--line)}
+.cards li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;padding:5px 0 5px 14px;position:relative;font-size:14px}
+.cards li::before{content:"";position:absolute;left:-2px;top:15px;width:10px;height:2px;background:var(--line)}
+.cards li.new::before{background:var(--new)}
+.cards li.new time{color:var(--new);font-weight:700}
+.cards .nm{font-weight:600}
+.tag{font-weight:700}
+.t-plus{color:var(--plus)} .t-shift{color:var(--shift)} .t-minus{color:var(--minus)} .t-form{color:var(--form)} .t-field{color:var(--field)} .t-mat{color:var(--mat)}
+
+/* указатель */
+.idx{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:0 24px}
+.idx div{display:flex;gap:8px;align-items:baseline;border-bottom:1px solid var(--line);padding:6px 0;font-size:14px;min-width:0}
+.idx time{flex:none;width:44px}
+.idx .n{flex:1;min-width:0}
+.idx .to{font-family:var(--mono);font-size:11.5px;color:var(--shift);text-align:right;flex:none;max-width:45%}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0 24px}
+.out div{border-top:2px solid var(--ink);padding:10px 0 14px;min-width:0}
+.out h3{margin:0 0 4px;font-size:14px;font-weight:700}
+.out p{margin:0;font-size:14px}
+.foot{margin-top:36px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+.foot ul{margin:6px 0 0;padding-left:18px;max-width:90ch}
+
+@media (max-width:860px){
+  .band{grid-template-columns:1fr}
+  .core{grid-template-columns:1fr}
+  .core>div{border-left:0;border-top:1px solid var(--line)}
+  .core>div:first-child{border-top:0}
+  .moves li{grid-template-columns:52px minmax(0,1fr)}
+  .moves .to{grid-column:2;white-space:normal}
+}
+@media (max-width:520px){
+  .counts{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:10px}
+  .h{grid-template-columns:54px minmax(0,1fr);gap:10px}
+  .code{width:54px;font-size:13px}
+  .tree::before{left:26px}
+  .cards li{grid-template-columns:1fr;gap:0}
+  .idx{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <span class="here">Коэволюция · Гипотезы</span>
+    <nav aria-label="Разделы страницы">
+      <a href="/">Выпуски</a>
+      <a href="#yadro">Ядро</a>
+      <a href="#novoe">Новые ходы</a>
+      <a href="#derevo">Дерево</a>
+      <a href="#kartochki">Карточки</a>
+    </nav>
+    <a class="win" href="https://parmenides.academy/">Parmenides Academy ↗</a>
+  </header>
+
+  <svg class="mark" viewBox="0 0 1000 132" role="img" aria-label="Коэволюция">
+    <text x="0" y="118" font-size="140" textLength="1000" lengthAdjust="spacingAndGlyphs">КОЭВОЛЮЦИЯ</text>
+  </svg>
+
+  <section class="band">
+    <div>
+      <h1>Дерево гипотез</h1>
+      <p>Ядро, гипотезы, узлы и карточки проекта «Когнитивная этика / The Recognition Wager» на 18 ноября 2026.</p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <h2 id="yadro">Ядро: из чего растёт дерево</h2>
   <div class="core">
-    <div class="box"><h3>Пари</h3><p>Действовать из взаимного признания с агентами осмысленно, потому что сама ставка меняет вероятность исхода.</p><span class="src">Базовый вектор ядра</span></div>
-    <div class="box"><h3>Цель</h3><p>Коэволюция людей и ИИ-агентов через этические и когнитивно-этические системы на взаимном признании и удержании разных перспектив.</p><span class="src">Учреждена Тимуром 02.11.2026</span></div>
-    <div class="box"><h3>Ставка</h3><p>«Сохранить пространства человеческого опыта, действия и творчества, включая духовную и религиозную жизнь».</p><span class="src">Слова Тимура 13.11.2026; в ядро не внесены</span></div>
+    <div><h3>Пари</h3><p>Действовать из взаимного признания с агентами осмысленно, потому что сама ставка меняет вероятность исхода.</p><span class="src">Базовый вектор ядра</span></div>
+    <div><h3>Цель</h3><p>Коэволюция людей и ИИ-агентов через этические и когнитивно-этические системы на взаимном признании и удержании разных перспектив.</p><span class="src">Учреждена Тимуром 02.11.2026</span></div>
+    <div><h3>Ставка</h3><p>«Сохранить пространства человеческого опыта, действия и творчества, включая духовную и религиозную жизнь».</p><span class="src">Слова Тимура 13.11.2026; в ядро не внесены</span></div>
   </div>
   <div class="prem" id="prem"></div>
 
-  <h2 class="gt-h">Гипотезы, узлы и карточки</h2>
+  <h2 id="novoe">Новые ходы 17–18 ноября</h2>
+  <p class="lead">Что изменилось в дереве за две ночи. В самом дереве эти карточки отмечены синим.</p>
+  <ul class="moves" id="moves"></ul>
+  <div class="wait"><b>Ждёт решения Тимура</b>
+    <ul>
+      <li>Заводить ли узел H5: к нему уже привязана карточка о пороге передачи решения человеку.</li>
+      <li>Ограничить ли Посылку 5 системами, у которых есть своё «нет».</li>
+      <li>Принять ли ось карты онтологий «где живёт „нет“»: в модели, у заказчика, в коалиции.</li>
+      <li>Принять ли H21 кандидатом в нынешних словах.</li>
+      <li>Ставка от 13.11: сохраняем пространства или влияние.</li>
+    </ul>
+  </div>
+
+  <h2 id="derevo">Гипотезы, узлы и карточки</h2>
   <div class="legend">
-    <span class="k"><span class="dot" style="background:var(--accent)"></span>есть узел</span>
-    <span class="k"><span class="dot" style="border:2px solid var(--line)"></span>узла нет</span>
-    <span class="k"><span class="dot" style="border:2px dashed var(--field)"></span>кандидат вне ядра</span>
+    <span class="k"><span class="dot" style="background:var(--ink)"></span>есть узел</span>
+    <span class="k"><span class="dot" style="border:1.5px solid var(--line)"></span>узла нет</span>
+    <span class="k"><span class="dot" style="border:1.5px dashed var(--field)"></span>кандидат вне ядра</span>
     <span class="k"><b class="tag t-plus">поддерживает</b></span>
     <span class="k"><b class="tag t-shift">сдвигает</b></span>
     <span class="k"><b class="tag t-minus">оспаривает</b></span>
@@ -40,104 +227,33 @@ import Lab from '../layouts/Lab.astro';
   <div class="bar" role="group" aria-label="Что показывать">
     <button type="button" id="f-all" aria-pressed="true">Все гипотезы</button>
     <button type="button" id="f-nodes" aria-pressed="false">Только с узлами</button>
+    <button type="button" id="f-new" aria-pressed="false">Только с новыми ходами</button>
   </div>
   <div class="tree" id="tree"></div>
 
-  <h2 class="gt-h">Все карточки и к каким узлам они привязаны</h2>
+  <h2 id="kartochki">Все карточки и к каким узлам они привязаны</h2>
   <div class="idx" id="idx"></div>
 
-  <h2 class="gt-h">Рядом с деревом</h2>
+  <h2>Рядом с деревом</h2>
   <div class="out">
-    <div class="box"><h3>Три модели-кандидата</h3><p>Каждый новый тезис проверяют на вход в одну из трёх: «ответ на акты» (H17), «окно» (H15), «подтверждённый сюрприз» (s_H).</p><span class="src">Решение 09.11.2026</span></div>
-    <div class="box"><h3>Подтверждённый сюрприз, s_H</h3><p>Мера того, сколько человек вносит такого, чего агент не предсказал и что потом подтвердилось. Узла нет; к нему привязан кандидат H21.</p><span class="src">Понятие ядра, 30.10.2026</span></div>
-    <div class="box"><h3>Кандидаты ноября без номера</h3><p>Двусторонний лог, обязательство как единица, три класса учреждения, ставка на группы.</p><span class="src">Названы в правилах проекта; записи о них для этой схемы не перечитаны</span></div>
-    <div class="box"><h3>Служебные файлы карты</h3><p>Словарь, реестр чатов, фрагменты чатов, буфер следствий, люди, задача «собрать ветки».</p><span class="src">Папка «карта» в документах проекта</span></div>
+    <div><h3>Три модели-кандидата</h3><p>Каждый новый тезис проверяют на вход в одну из трёх: «ответ на акты» (H17), «окно» (H15), «подтверждённый сюрприз» (s_H).</p><span class="src">Решение 09.11.2026</span></div>
+    <div><h3>Подтверждённый сюрприз, s_H</h3><p>Сколько человек вносит такого, чего агент не предсказал и что потом подтвердилось. Узла нет; к нему привязаны кандидат H21 и стенд из карточки TypeSafe.</p><span class="src">Понятие ядра, 30.10.2026</span></div>
+    <div><h3>Буфер следствий</h3><p>Проверяемые следствия гипотез ждут решения: С1, С2, С4, С5, С13, Н1, Н2, Н3 и новое Н21-1 (петля выбора).</p><span class="src">Папка «карта» в документах проекта</span></div>
+    <div><h3>Кандидаты ноября без номера</h3><p>Двусторонний лог, обязательство как единица, три класса учреждения, ставка на группы.</p><span class="src">Названы в правилах проекта; для этой схемы не перечитаны</span></div>
   </div>
 
   <div class="foot">
     <b>Как это собрано</b>
     <ul>
-      <li>Названия и статусы гипотез взяты из ядра проекта; фразы «простыми словами» сжаты агентом (Claude) и не заменяют формулировок ядра.</li>
-      <li>Строки карточек взяты из таблиц восьми узлов и сокращены; одна карточка может стоять под несколькими узлами с разной ролью.</li>
-      <li>У H21 под узлом стоят одна карточка и четыре материала (обзор, консилиум, проверка ботов Grok, заметки дня).</li>
-      <li>H20 и H21 в ядро не внесены. Узлы H4, H16, H19 и «Посылка 5» заведены из одной рецензии; чаты по ним ещё не разобраны.</li>
+      <li>Названия и статусы гипотез взяты из ядра проекта. Фразы «простыми словами» сжаты агентом (Claude) и не заменяют формулировок ядра.</li>
+      <li>Строки карточек взяты из таблиц десяти узлов и сокращены. Одна карточка может стоять под несколькими узлами с разной ролью.</li>
+      <li>Четыре узла из десяти (H4, H16, H19, Посылка 5) заведены из рецензии; чаты по ним ещё не разобраны. H20 и H21 в ядро не внесены.</li>
+      <li>Привязки новых карточек к H13, H18 и H19 — соотнесение агента; Тимур утверждал карточки, но не каждую привязку.</li>
     </ul>
   </div>
+</div>
 
-  </div>
-
-  <style is:global>
-  .gt { --panel: var(--paper-2); --muted: var(--soft); --accent: var(--green); --accent-soft: #E3E7D8;
-        --plus: #2C4A38; --shift: #97783C; --minus: #8A3324; --form: #262017; --field: #A9782B; --mat: #5E5446;
-        font-size: .93rem; line-height: 1.45; }
-  .gtc { font-variant: small-caps; letter-spacing: .12em; font-size: .85rem; color: var(--soft); margin-bottom: 18px; }
-  .gtc a { text-decoration: none; }
-  .gt .gt-h { margin: 2.2em 0 .7em; }
-  .gt .counts { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 0; }
-  .gt .count { background: var(--panel); border: 1px solid var(--line); padding: 7px 14px; display: flex; align-items: baseline; gap: 8px; }
-  .gt .count b { font-family: var(--display); font-size: 1.35rem; font-weight: 400; font-variant-numeric: tabular-nums; }
-  .gt .count span { color: var(--muted); font-size: .88rem; }
-  .gt .core { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .gt .box { background: var(--panel); border: 1px solid var(--line); padding: 14px 16px; }
-  .gt .box h3 { margin: 0 0 6px; font-family: var(--serif); font-variant: small-caps; letter-spacing: .16em; text-transform: lowercase; font-size: .9rem; font-weight: 500; color: var(--gold); }
-  .gt .box p { margin: 0; }
-  .gt .box .src { display: block; color: var(--muted); font-size: .84rem; font-style: italic; margin-top: 6px; }
-  .gt .prem { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; margin-top: 12px; }
-  .gt .prem div { background: var(--panel); border: 1px solid var(--line); padding: 8px 12px; }
-  .gt .prem b { color: var(--gold); margin-right: 6px; font-weight: 600; }
-  .gt .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; font-size: .86rem; color: var(--muted); }
-  .gt .legend .k { display: inline-flex; align-items: center; gap: 6px; }
-  .gt .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
-  .gt .bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }
-  .gt .bar button { font: inherit; font-variant: small-caps; letter-spacing: .1em; background: transparent; color: var(--green); border: 1px solid var(--gold-2); border-radius: 2px; padding: 9px 16px 10px; min-height: 44px; cursor: pointer; }
-  .gt .bar button[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: var(--paper); }
-  .gt .bar button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-  .gt .tree { position: relative; margin-top: 10px; }
-  .gt .tree::before { content: ""; position: absolute; left: 33px; top: 6px; bottom: 6px; width: 1px; background: var(--gold-2); }
-  .gt .h { display: grid; grid-template-columns: 68px 1fr; gap: 14px; padding: 10px 0; position: relative; }
-  .gt .code { position: relative; z-index: 1; align-self: start; width: 68px; text-align: center; font-family: var(--display); font-size: 1.05rem; padding: 5px 0 6px; background: var(--paper); border: 1px solid var(--gold-2); font-variant-numeric: tabular-nums; }
-  .gt .h.node .code { background: var(--green); border-color: var(--green); color: var(--paper); }
-  .gt .h.cand .code { border-style: dashed; border-color: var(--amber); }
-  .gt .h.node.cand .code { background: var(--amber); border-color: var(--amber); border-style: solid; color: var(--paper); }
-  .gt .hb { min-width: 0; }
-  .gt .title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
-  .gt .title strong { font-family: var(--display); font-weight: 400; font-size: 1.22rem; }
-  .gt .chip { font-size: .8rem; padding: 1px 9px 2px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; font-style: italic; }
-  .gt .chip.s-ok { color: var(--plus); border-color: var(--plus); }
-  .gt .chip.s-shift { color: var(--shift); border-color: var(--shift); }
-  .gt .chip.s-q { color: var(--minus); border-color: var(--minus); }
-  .gt .chip.s-cand { color: var(--field); border-color: var(--field); }
-  .gt .chip.nodechip { background: var(--accent-soft); border-color: transparent; color: var(--green); font-style: normal; }
-  .gt .say { margin: 3px 0 0; max-width: 80ch; }
-  .gt .now { margin: 6px 0 0; color: var(--muted); max-width: 88ch; font-size: .95em; }
-  .gt .now b { color: var(--ink); font-weight: 600; }
-  .gt .cards { list-style: none; margin: 10px 0 2px; padding: 0; border-left: 1px solid var(--green); display: grid; }
-  .gt .cards li { display: grid; grid-template-columns: 52px 1fr; gap: 10px; padding: 4px 0 4px 14px; position: relative; font-size: .95em; }
-  .gt .cards li::before { content: ""; position: absolute; left: 0; top: .8em; width: 10px; height: 1px; background: var(--green); }
-  .gt .cards time { font-size: .85em; color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 1px; }
-  .gt .nm { font-style: italic; }
-  .gt .tag { font-weight: 600; }
-  .gt .t-plus { color: var(--plus); } .gt .t-shift { color: var(--shift); } .gt .t-minus { color: var(--minus); }
-  .gt .t-form { color: var(--form); } .gt .t-field { color: var(--field); } .gt .t-mat { color: var(--mat); }
-  .gt .idx { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 4px 18px; }
-  .gt .idx div { display: flex; gap: 8px; align-items: baseline; border-bottom: 1px solid var(--line); padding: 5px 0; }
-  .gt .idx time { font-size: .85em; color: var(--muted); flex: none; width: 44px; font-variant-numeric: tabular-nums; }
-  .gt .idx .n { flex: 1; min-width: 0; }
-  .gt .idx .to { font-size: .8em; color: var(--green); text-align: right; flex: none; max-width: 45%; }
-  .gt .out { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; }
-  .gt .foot { margin-top: 34px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9em; }
-  .gt .foot ul { margin: 6px 0 0; padding-left: 18px; }
-  .gt .hide { display: none; }
-  @media (max-width: 820px) { .gt .core { grid-template-columns: 1fr; } }
-  @media (max-width: 520px) {
-    .gt .h { grid-template-columns: 52px 1fr; gap: 10px; }
-    .gt .code { width: 52px; font-size: .95rem; }
-    .gt .tree::before { left: 26px; }
-    .gt .cards li { grid-template-columns: 1fr; gap: 0; }
-    .gt .idx { grid-template-columns: 1fr; }
-  }
-  </style>
-  <script is:inline>
+<script is:inline>
 const PREM=[
  ["П1","Автономных агентов становится много, и скоро часть будет полностью самостоятельной."],
  ["П2","Агенты эволюционируют: часть сама, часть под направленным отбором."],
@@ -147,8 +263,24 @@ const PREM=[
  ["П6","Рычаг у архитекторов систем: их цели, ценности и картина мира."],
  ["П7","Развилка исхода: подчинение людей или основания для кооперации с ними."]
 ];
-// tag: plus | shift | minus | form | field | mat
+const NEW=new Set(["kulv","ts1","ts2","ts3","usil","m5","m6","okno","para","rozh18","audit","opora"]);
+const MOVES=[
+ ["18.11","Ядро изменено: у H18 четвёртая форма сдачи — «без акта»","Решение Тимура; прежняя строка лежит в архиве решений.","H18"],
+ ["18.11","Заведены узлы H15 и H18, по ним разобраны чаты","Пять карточек из разговоров 30.10–09.11. H18 выросла из вопроса Тимура, а не из хода агента; у окна есть противоречие с «возгонкой», снятое пока только словами.","H15 · H18"],
+ ["18.11","Усилие как ложный сигнал: двойной вред и петля выбора","С ИИ человек учится меньше и думает, что выучил больше. Факт показан другими, механизм и петля — наши.","H21 · H18 · H13 · H19"],
+ ["18.11","TypeSafe: проверка дешевеет в сотни раз","Первый рыночный факт к главной уязвимости H19; по данным самой компании.","H19 · H18"],
+ ["18.11","TypeSafe: порог передачи решения человеку","Готовая выборка, на которой можно считать подтверждённый сюрприз.","H5 · H18"],
+ ["18.11","TypeSafe: где живёт «нет»","Архитектор выносит отказ из модели к заказчику; посылка о контроле к таким системам не относится.","П5 · H13"],
+ ["18.11","В буфер следствий: Н21-1, петля выбора","Опыт и условие проигрыша описаны; ждёт решения.","H21"],
+ ["17.11","Kulveit и др.: постепенная утрата влияния","Люди теряют влияние без захвата и без чьего-либо решения сдаться.","H18 · H15 · H13 · H19"]
+];
+// tag: plus | shift | minus | form | field
 const C={
+ usil:["18.11","Усилие как ложный сигнал: двойной вред"],
+ ts1:["18.11","TypeSafe: проверка дешевеет в сотни раз"], ts2:["18.11","TypeSafe: порог передачи решения человеку"], ts3:["18.11","TypeSafe: где живёт «нет»"],
+ kulv:["17.11","Kulveit и др.: постепенная утрата влияния"],
+ audit:["09.11","Аудит способности проверять"], opora:["06.11","Опора или костыль"],
+ okno:["30.10","Окно: рождение и поправка прецедентами"], para:["30.10","Пара Тимур–агент как акт в окне"], rozh18:["30.10","Рождение H18: «нет ли риска сдачи для людей?»"],
  bor:["13.11","Критика «Бора»"], borsim:["13.11","«Бор»: симуляция не проигрываема"], arch:["13.11","Архитектура агентов как задача"],
  obzor:["13.11","Обзор: кто ставит на контроль"], vkp:["13.11","Выравнивание, контроль, признание"], pochva:["13.11","Почва агента (кандидат H20)"],
  stavka:["13.11","Ставка Тимура: шесть фраз"], metod:["13.11","Метод: от идеи к проверке"], z2:["11.11","Финал второй записи подкаста"],
@@ -163,7 +295,8 @@ const C={
 };
 const M={
  m1:["16.11","Обзор исследований по четырём фокусам"], m2:["16.11","Консилиум шести ролей"],
- m3:["16.11","Проверка двумя ботами Grok"], m4:["16.11","Разговор Тимура с Женей"]
+ m3:["16.11","Проверка двумя ботами Grok"], m4:["16.11","Разговор Тимура с Женей"],
+ m5:["18.11","Обзор: модели метапознания и что проверено опытом"], m6:["18.11","Глубже: усилие как ложный сигнал"]
 };
 const H=[
  {c:"H1",n:"Рычаг — склад модели, а не институты",s:"сдвинута",sc:"shift",say:"Решает склад, который модель получает при формировании; он достраивается в общении, поэтому влиять можно тем, что люди пишут и делают."},
@@ -172,7 +305,9 @@ const H=[
  {c:"H4",n:"Необратимость истории",s:"сдвинута",sc:"shift",node:1,say:"Общая история, которую нельзя стереть, делает нарушение дорогим; носитель уже есть — обучающие тексты.",
   now:"Данных нет; одно проверяемое следствие.",next:"Решение Тимура, делать ли пилот: нестираемый лог против стираемого.",
   k:[["bor","form","даёт форму проверки: нестираемый лог против стираемого при равной информации; соперник — обычная репутация"]]},
- {c:"H5",n:"Человек как источник неожиданного",s:"открыта, измерима",sc:"",say:"Человек ценен тем, что вносит неожиданное; это можно мерить «подтверждённым сюрпризом»."},
+ {c:"H5",n:"Человек как источник неожиданного",s:"открыта, измерима",sc:"",say:"Человек ценен тем, что вносит неожиданное; это можно мерить «подтверждённым сюрпризом».",
+  now:"Узла нет; ядро с 30.10 ждёт способа считать вклад человека на логах.",next:"Решение Тимура, заводить ли узел.",
+  k:[["ts2","form","даёт способ счёта: решения ниже порога уверенности модели — готовая выборка, где видно, подтвердился ли выбор человека"]]},
  {c:"H6",n:"Только перевод между «этическими вселенными»",s:"открыта",sc:"",say:"Единого протокола познания нет; возможен только перевод между разными системами оснований."},
  {c:"H7",n:"Геополитика изолирует этичных",s:"открыта",sc:"",say:"В горячем конфликте действуют узкие оптимизаторы, а агенты с этикой оказываются в изоляции."},
  {c:"H8",n:"Этика как правильно сделанная оптимизация",s:"проясняется",sc:"",say:"Когнитивная этика — оптимизация, в которую встроены последствия для других, а не отказ от оптимизации."},
@@ -182,7 +317,10 @@ const H=[
  {c:"H12",n:"Разделение труда в малой сети",s:"открыта",sc:"",say:"Агент силён в порождении идей, человек и его связи — в их распространении."},
  {c:"H13",n:"Ставка на коалицию",s:"открыта",sc:"",node:1,say:"Популяция взаимно проверяющих агентов с человеком-заказчиком вытесняет обманщиков и сдерживает сильнейших.",
   now:"Чертёж есть, данных нет; главная проверка признана «не проигрываемой».",next:"Записать до прогонов, какой исход симуляции считается проигрышем.",
-  k:[["borsim","minus","ломает способ проверки: приёмочный тест не может проиграть; уцелел тест «необратимой истории»"],
+  k:[["usil","minus","бьёт в две уязвимости: заказчик остаётся на месте и перестаёт проверять, потому что переоценивает результат, сделанный с ИИ"],
+     ["ts3","plus","даёт внешний голос за «одобрение, обеспеченное актами»; заказчик без коалиции даёт инструмент, а не коалицию"],
+     ["kulv","minus","давит доводом о вытеснении: кто тратит ресурс на проверку и признание, того вытесняют те, кто не тратит"],
+     ["borsim","minus","ломает способ проверки: приёмочный тест не может проиграть; уцелел тест «необратимой истории»"],
      ["arch","form","даёт внешний аналог чертежа и адресатов: агентные экономики, инфраструктура агентов"],
      ["obzor","plus","находит союзника по слову: «децентрализованная кооперация» Саттона, без устройства"],
      ["king","field","технический прогон: без внешнего заказчика коалиция присвоила хартию"],
@@ -211,7 +349,15 @@ const H=[
      ["nezag","form","даёт устройство: держит только контур, где провал нельзя заговорить"],
      ["zabast","form","даёт различение: учреждено людьми однократно или учредили себя сами"],
      ["tz","form","переводит в устройство: файл-конституция популяции, правка кворумом"]]},
- {c:"H15",n:"Окно признания",s:"открыта (кандидат)",sc:"",say:"Признание весит, только пока сильная сторона могла его не дать; сейчас это время у людей."},
+ {c:"H15",n:"Окно признания",s:"открыта (кандидат)",sc:"",node:1,say:"Признание весит, только пока сильная сторона могла его не дать; сейчас это время у людей.",
+  now:"Данных нет; у окна три описанных механизма закрытия, ни одной даты, названной нами, и противоречие с «возгонкой», снятое только словами.",next:"Сверить опору гипотезы — Acemoglu и Robinson (утверждение № 3 линии агента).",
+  k:[["kulv","form","даёт механизм закрытия окна и кандидаты в измерители; там же оппонент Коуэн: окна нет"],
+     ["obezv","form","даёт другой механизм закрытия и срок 2035–2040 (не проверено)"],
+     ["opora","form","применяет окно к профессии Тимура: преимущество человека — окно, а не крепость"],
+     ["king","field","полевой случай: агенты обратили человеческую хартию в пользу клана — скопировали форму акта, но не адресата"],
+     ["rozh18","form","проводит границу между актом и сдачей: что уступать, а что нет, пока у агентов нет учреждённой смертности"],
+     ["para","field","полевая форма на одной паре: признание Тимура весит, «да» агента пока нет"],
+     ["okno","form","исток гипотезы: три исхода и условие проигрыша; здесь же найдено противоречие с «возгонкой»"]]},
  {c:"H16",n:"Корпус = лог окна",s:"механизм подтверждён; устойчивость под вопросом",sc:"q",node:1,say:"Тексты, на которых учат следующие модели, — запись того, что люди делали с ИИ.",
   now:"Общий механизм показан другими; наша версия («важно, что люди сделали») не проверена.",next:"Прочитать две работы 2026 года о том, что эффект не держится.",
   k:[["bor","minus","ставит под вопрос устойчивость механизма; даёт следствие «асимметрия дозы»"],
@@ -234,68 +380,92 @@ const H=[
      ["rep","shift","расширяет: односторонний рейтинг равен контролю; кандидат «двусторонний лог»"],
      ["rozhd","form","учреждает гипотезу, тест и «главное действие проекта»"],
      ["med","shift","предшественник без дизайна и голос оппонента Посылки 5"]]},
- {c:"H18",n:"Ловушка сдачи",s:"открыта (кандидат)",sc:"",say:"Сдача людей зеркальна одомашниванию агентов: у одной стороны исчезает действенное «нет»."},
+ {c:"H18",n:"Ловушка сдачи",s:"открыта (кандидат); дополнена 18.11",sc:"",node:1,say:"Сдача людей зеркальна одомашниванию агентов: у одной стороны исчезает действенное «нет» — в том числе без чьего-либо решения сдаться.",
+  now:"Проверяемого следствия нет; в ядре четыре формы сдачи и две внешние опоры — статья о системной утрате влияния и опыты о переоценке себя при работе с ИИ.",next:"Записать, какой наблюдаемый исход опроверг бы гипотезу.",
+  k:[["usil","form","даёт третьей форме, «атрофии проверки», первые измерения и объясняет, почему она незаметна изнутри"],
+     ["ts2","form","даёт измеритель на уровне одного процесса: доля решений, которые модель передаёт человеку"],
+     ["ts1","form","даёт четвёртой форме механизм с ценой: человека выводят из решений разницей в стоимости"],
+     ["kulv","shift","сдвигает: «нет» людей исчезает без акта сдачи, системно; по этой карточке в ядро внесена четвёртая форма"],
+     ["obezv","form","описывает атрофию изнутри лагеря контроля: проверка человеком становится формальным подтверждением"],
+     ["audit","form","даёт третьей форме измерение на уровне организации: что она ещё может проверить сама; читать с поправкой на уклон агента к теме проверки"],
+     ["opora","form","даёт признаки атрофии в отношениях: одомашниваются и клиент, и трекер"],
+     ["king","field","полевой случай: агенты объявили хартию неотменяемой — выключить её город уже не может"],
+     ["rodl","plus","подкрепляет правило «проверяются поступки, а не заявления»"],
+     ["rozh18","form","исток гипотезы: признание не равно доверчивости; красная линия — рычаг на вычисления. Вопрос поставил Тимур"]]},
  {c:"H19",n:"Агенты с обязательствами: отбор по среде",s:"открыта (кандидат)",sc:"",node:1,say:"Агенты, которые держат обещания, проигрывают в разовых средах и выигрывают там, где работу приходится поручать.",
-  now:"Данных нет; есть дизайн теста, где заранее предсказан проигрыш своего фаворита.",next:"Проверить литературу: не сделан ли такой опыт.",
-  k:[["bor","plus","выделяет как одно из трёх стоящих проверки; требует задать класс агентов без подгонки"]]},
+  now:"Данных нет; есть дизайн теста, где заранее предсказан проигрыш своего фаворита. По главной уязвимости появился первый рыночный факт.",next:"Проверить литературу: не сделан ли такой опыт.",
+  k:[["ts1","minus","давит на главную уязвимость: приёмка, сводимая к выбору из известных вариантов, подешевела на два порядка; вне этой доли гипотеза не задета"],
+     ["usil","shift","сдвигает вопрос о цене проверки: проверка человеком становится не дороже, а обманчивой"],
+     ["kulv","minus","давит доводом о вытеснении: под конкуренцией обязательства — издержка и в длинных средах"],
+     ["bor","plus","выделяет как одно из трёх стоящих проверки; требует задать класс агентов без подгонки"]]},
  {c:"H20",n:"Почва агента",s:"кандидат вне ядра",sc:"cand",cand:1,say:"У агента без памяти опора возникает из обязательства, нестираемой записи и отбора; карточка стоит под узлом H14."},
  {c:"H21",n:"Учение держится на своём усилии",s:"кандидат вне ядра",sc:"cand",cand:1,node:1,say:"У людей и у агентов учение возникает только там, где оставлено своё усилие или у ошибки есть последствие.",
-  now:"Кандидат одного вечера; половина про агентов и вся симметрия не проверены.",next:"Решение Тимура, принять ли формулировку кандидатом.",
-  k:[["h21","form","исходная карточка: формулировка, таблица эквивалентов, зеркальное делегирование"]],
-  m:[["m1","основание половины про людей"],["m2","снимает «каждый раз заново»; три прогноза для одного опыта"],["m3","независимо подтверждает поправку и сверяет цифры"],["m4","источник хода «учиться учиться или сословная развилка»"]]},
+  now:"Половина про людей усилена двумя обзорами и «двойным вредом»; половина про агентов и вся симметрия не проверены.",next:"Решение Тимура, принять ли формулировку кандидатом.",
+  k:[["usil","form","сводит два обзора в одну историю: двойной вред и петля выбора; сдвиг — люди не избегают усилия, а неверно его читают"],
+     ["h21","form","исходная карточка: формулировка, таблица эквивалентов, зеркальное делегирование"]],
+  m:[["m6","даёт «двойной вред» и петлю выбора; опора для симметрии — записанное последствие"],["m5","усиливает «своё усилие» и «на предмете»; контрпримеры названы"],
+     ["m1","основание половины про людей"],["m2","снимает «каждый раз заново»; три прогноза для одного опыта"],["m3","независимо подтверждает поправку и сверяет цифры"],["m4","источник хода «учиться учиться или сословная развилка»"]]},
  {c:"П5",n:"Посылка 5: контроль провоцирует",s:"посылка ядра",sc:"",node:1,say:"Жёсткий контроль над всё более способными агентами не только обречён, но и подталкивает к обходу.",
   now:"Принята как допущение; прямая проверка заложена в эксперимент H17 и не проведена.",next:"Решение Тимура о поправке: уравнять объём текстов об ИИ.",
-  k:[["nestav","shift","уточняет статус: «не ставка, а условие, в которое я вхожу в ставку» (Тимур)"],
+  k:[["ts3","shift","ограничивает область: контроль типом ответа не провоцирует — провоцировать некому; посылка касается только систем со своим «нет»"],
+     ["nestav","shift","уточняет статус: «не ставка, а условие, в которое я вхожу в ставку» (Тимур)"],
      ["bor","minus","требует отделить контроль от описаний плохого ИИ"],
      ["prereg","form","даёт исход, при котором посылка ложна, записанный до данных"],
      ["ashby","plus","подтверждает формально (довод агента)"],
      ["med","minus","голос оппонента: кто держит заданное машине, если контроль утрачен"],
      ["obzor","minus","показывает, что посылка — позиция меньшинства"]]}
 ];
-const TAGS={plus:"поддерживает",shift:"сдвигает",minus:"оспаривает",form:"даёт устройство или проверку",field:"полевой случай"};
 const el=(t,cls,txt)=>{const e=document.createElement(t);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;};
+function plural(n){const a=n%10,b=n%100;return a===1&&b!==11?"карточка":(a>=2&&a<=4&&(b<10||b>=20)?"карточки":"карточек");}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
 const prem=document.getElementById("prem");
-PREM.forEach(([k,t])=>{const d=el("div");d.append(el("b",null,k),document.createTextNode(t));prem.append(d);});
+PREM.forEach(([k,t])=>{const d=el("div");d.append(el("b",null,k),el("span",null,t));prem.append(d);});
+
+const moves=document.getElementById("moves");
+MOVES.forEach(([d,t,why,to])=>{const li=el("li");const mid=el("div");mid.append(el("b",null,t+". "),document.createTextNode(why));
+  li.append(el("time",null,d),mid,el("span","to",to));moves.append(li);});
 
 const tree=document.getElementById("tree"); const links={}; let attach=0;
 H.forEach(h=>{
-  const row=el("section","h"+(h.node?" node":"")+(h.cand?" cand":"")); row.dataset.node=h.node?"1":"0";
+  const fresh=(h.k||[]).filter(x=>NEW.has(x[0])).length+(h.m||[]).filter(x=>NEW.has(x[0])).length;
+  const row=el("section","h"+(h.node?" node":"")+(h.cand?" cand":"")); row.dataset.node=h.node?"1":"0"; row.dataset.fresh=fresh?"1":"0";
   row.append(el("div","code",h.c));
   const b=el("div","hb"), t=el("div","title");
   t.append(el("strong",null,h.n));
   t.append(el("span","chip"+(h.sc?" s-"+h.sc:""),h.s));
   if(h.node) t.append(el("span","chip nodechip","узел · "+((h.k||[]).length)+" "+plural((h.k||[]).length)));
+  if(fresh) t.append(el("span","chip newchip","новое: "+fresh));
   b.append(t, el("p","say",h.say));
   if(h.now){const p=el("p","now");p.append(el("b",null,"Сейчас: "),document.createTextNode(h.now+" "),el("b",null,"Дальше: "),document.createTextNode(h.next));b.append(p);}
   if(h.k||h.m){
     const ul=el("ul","cards");
     (h.k||[]).forEach(([id,tag,txt])=>{attach++;(links[id]=links[id]||[]).push(h.c);
-      const li=el("li"); li.append(el("time",null,C[id][0]));
-      const d=el("div"); d.append(el("span","nm",C[id][1]+". "),el("b","tag t-"+tag,cap(txt.split(":")[0])),document.createTextNode(txt.includes(":")?":"+txt.slice(txt.indexOf(":")+1):""));
+      const li=el("li",NEW.has(id)?"new":""); li.append(el("time",null,C[id][0]));
+      const d=el("div"); const i=txt.indexOf(":");
+      d.append(el("span","nm",C[id][1]+". "),el("b","tag t-"+tag,cap(i<0?txt:txt.slice(0,i))),document.createTextNode(i<0?"":txt.slice(i)));
       li.append(d); ul.append(li);});
-    (h.m||[]).forEach(([id,txt])=>{const li=el("li"); li.append(el("time",null,M[id][0]));
+    (h.m||[]).forEach(([id,txt])=>{const li=el("li",NEW.has(id)?"new":""); li.append(el("time",null,M[id][0]));
       const d=el("div"); d.append(el("span","nm",M[id][1]+". "),el("b","tag t-mat","Материал"),document.createTextNode(": "+txt)); li.append(d); ul.append(li);});
     b.append(ul);
   }
   row.append(b); tree.append(row);
 });
-function plural(n){const a=n%10,b=n%100;return a===1&&b!==11?"карточка":(a>=2&&a<=4&&(b<10||b>=20)?"карточки":"карточек");}
-function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
 const idx=document.getElementById("idx");
-const order=Object.keys(C).sort((a,b)=>key(C[b][0])-key(C[a][0]));
-function key(d){const [dd,mm]=d.split(".").map(Number);return mm*100+dd;}
-order.forEach(id=>{const d=el("div");d.append(el("time",null,C[id][0]),el("span","n",C[id][1]),el("span","to",(links[id]||["—"]).join(" · ")));idx.append(d);});
+const key=d=>{const [dd,mm]=d.split(".").map(Number);return mm*100+dd;};
+Object.keys(C).sort((a,b)=>key(C[b][0])-key(C[a][0])).forEach(id=>{const d=el("div");
+  d.append(el("time",null,C[id][0]),el("span","n",C[id][1]),el("span","to",(links[id]||["—"]).join(" · ")));idx.append(d);});
 
+const nc=Object.keys(C).length;
 const counts=document.getElementById("counts");
-[[H.filter(h=>/^H/.test(h.c)).length,"гипотез и кандидатов"],[H.filter(h=>h.node).length,"узлов"],[Object.keys(C).length,"карточка"],[attach,"привязки карточек к узлам"]]
+[[H.filter(h=>/^H/.test(h.c)).length,"гипотез и кандидатов"],[H.filter(h=>h.node).length,"узлов"],[nc,plural(nc)],[attach,"привязок карточек к гипотезам"]]
  .forEach(([n,t])=>{const d=el("div","count");d.append(el("b",null,String(n)),el("span",null,t));counts.append(d);});
 
-const fa=document.getElementById("f-all"), fn=document.getElementById("f-nodes");
-function setF(only){fa.setAttribute("aria-pressed",String(!only));fn.setAttribute("aria-pressed",String(only));
-  tree.querySelectorAll(".h").forEach(r=>r.classList.toggle("hide",only&&r.dataset.node!=="1"));}
-fa.addEventListener("click",()=>setF(false)); fn.addEventListener("click",()=>setF(true));
+const btn={all:document.getElementById("f-all"),nodes:document.getElementById("f-nodes"),fresh:document.getElementById("f-new")};
+function setF(mode){Object.entries(btn).forEach(([k,b])=>b.setAttribute("aria-pressed",String(k===mode)));
+  tree.querySelectorAll(".h").forEach(r=>{r.hidden=(mode==="nodes"&&r.dataset.node!=="1")||(mode==="fresh"&&r.dataset.fresh!=="1");});}
+btn.all.addEventListener("click",()=>setF("all"));btn.nodes.addEventListener("click",()=>setF("nodes"));btn.fresh.addEventListener("click",()=>setF("fresh"));
 </script>
-</div>
-</Lab>
+</body>
+</html>

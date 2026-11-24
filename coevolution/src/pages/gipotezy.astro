@@ -1,6 +1,7 @@
 ---
 // Дерево гипотез — страница раздела «Коэволюция». Самостоятельная: свой head, стили и скрипт внутри, макет Lab.astro не используется.
 // Собрано 18.11.2026 из артефакта «Дерево гипотез» (версия 4). Данные — константы PREM, MOVES, C, M, H, NEW в скрипте ниже.
+// 25.11.2026: доступ только по прямой ссылке — убрано из меню, подвала, главной и sitemap; noindex (meta + заголовок в public/_headers), Disallow для ИИ-сборщиков в robots.txt.
 // 19.11.2026: поставлено на поддомен (замена прежней страницы); кнопка Parmenides — в тоне основного сайта, как на остальных страницах поддомена.
 ---
 <!DOCTYPE html>
@@ -10,6 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Дерево гипотез — Коэволюция</title>
 <meta name="description" content="Ядро, гипотезы, узлы и карточки проекта о коэволюции людей и ИИ-агентов: 21 гипотеза, 10 узлов, 41 карточка. Состояние на 18 ноября 2026.">
+<meta name="robots" content="noindex, nofollow">
 <link rel="canonical" href="https://coevolution.parmenides.academy/gipotezy">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">

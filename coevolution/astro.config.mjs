@@ -4,5 +4,6 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://coevolution.parmenides.academy',
-  integrations: [sitemap()],
+  // /gipotezy — только по прямой ссылке (25.11.2026), в sitemap не попадает.
+  integrations: [sitemap({ filter: (page) => !page.includes('/gipotezy') })],
 });

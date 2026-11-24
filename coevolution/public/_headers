@@ -1,0 +1,5 @@
+# 25.11.2026: дерево гипотез — только по прямой ссылке, не индексировать.
+/gipotezy
+  X-Robots-Tag: noindex, nofollow
+/gipotezy/*
+  X-Robots-Tag: noindex, nofollow

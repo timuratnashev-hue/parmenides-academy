@@ -2,12 +2,15 @@ User-agent: *
 Allow: /
 
 User-agent: GPTBot
+Disallow: /gipotezy
 Allow: /
 
 User-agent: ClaudeBot
+Disallow: /gipotezy
 Allow: /
 
 User-agent: PerplexityBot
+Disallow: /gipotezy
 Allow: /
 
 Sitemap: https://coevolution.parmenides.academy/sitemap-index.xml

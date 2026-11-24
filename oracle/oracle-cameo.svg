@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 320 380" role="img" aria-label="Оракул: камея с профилем пифии в лавровом венке">
+  <defs>
+    <path id="arc" d="M 44 200 A 116 138 0 0 1 276 200"/>
+    <clipPath id="oval"><ellipse cx="160" cy="200" rx="98" ry="120"/></clipPath>
+    <symbol id="leaf" viewBox="-6 -14 12 28" overflow="visible"><path d="M0 -13 C 6 -6 6 6 0 13 C -6 6 -6 -6 0 -13 Z"/></symbol>
+  </defs>
+
+  <!-- медальон: двойная золотая рамка, как обложка сайта -->
+  <ellipse cx="160" cy="200" rx="148" ry="172" fill="none" stroke="#C9B27A" stroke-width="1"/>
+  <ellipse cx="160" cy="200" rx="141" ry="165" fill="none" stroke="#97783C" stroke-width="1.2"/>
+  <ellipse cx="160" cy="200" rx="104" ry="126" fill="#2C4A38" stroke="#97783C" stroke-width="1.4"/>
+
+  <!-- надпись по дуге: «Познай самого себя» -->
+  <text font-family="'Old Standard TT', 'EB Garamond', Georgia, serif" font-size="15" letter-spacing="6" fill="#97783C">
+    <textPath href="#arc" xlink:href="#arc" startOffset="50%" text-anchor="middle">ΓΝΩΘΙ · ΣΑΥΤΟΝ</textPath>
+  </text>
+  <text x="160" y="356" text-anchor="middle" font-family="'EB Garamond', Georgia, serif" font-size="18" fill="#97783C">❈</text>
+
+  <g clip-path="url(#oval)">
+    <!-- дым от треножника -->
+    <g fill="none" stroke="#C9B27A" stroke-width="1.2" stroke-linecap="round" opacity=".75">
+      <path d="M 236 330 C 226 308 250 296 238 274 C 228 258 248 246 242 226"/>
+      <path d="M 250 334 C 244 314 264 304 256 284 C 250 268 266 258 260 240"/>
+      <path d="M 222 334 C 214 318 230 308 224 292"/>
+    </g>
+
+    <!-- покрывало -->
+    <path fill="#C9B27A" opacity=".55" d="M 140 104 C 104 112 88 150 90 196 C 92 240 98 278 84 340 L 152 340 C 140 296 128 262 126 224 C 124 184 128 136 156 108 Z"/>
+
+    <!-- профиль: греческая линия лба и носа -->
+    <path fill="#F7F2E5" d="
+      M 118 342
+      C 122 310 126 286 124 264
+      C 108 250 100 224 102 198
+      C 104 152 128 114 168 108
+      C 190 106 204 116 208 130
+      C 210 140 210 150 212 158
+      L 227 192
+      C 227 196 221 197 216 197
+      C 218 200 219 202 216 204
+      C 213 205 213 206 216 208
+      C 218 211 216 214 212 215
+      C 209 219 214 225 212 231
+      C 210 239 202 243 194 243
+      C 186 245 184 253 186 263
+      C 188 283 194 300 204 316
+      C 214 330 230 336 246 344
+      L 108 344 Z"/>
+    <!-- линия шеи и век — едва намечены -->
+    <path d="M 196 160 C 200 158 204 159 206 162" fill="none" stroke="#97783C" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M 194 245 C 192 256 194 268 198 280" fill="none" stroke="#D9CFB8" stroke-width="1.2"/>
+
+    <!-- узел волос -->
+    <ellipse cx="114" cy="176" rx="17" ry="21" fill="#EFE8D6" stroke="#C9B27A" stroke-width="1"/>
+    <path d="M 102 168 C 110 158 122 160 127 170 M 100 180 C 110 172 122 174 127 184 M 104 190 C 112 184 120 186 124 194" fill="none" stroke="#C9B27A" stroke-width="1.1"/>
+    <path d="M 132 150 C 150 140 170 136 196 140" fill="none" stroke="#D9CFB8" stroke-width="1.1"/>
+    <path d="M 128 162 C 148 152 168 150 190 152" fill="none" stroke="#D9CFB8" stroke-width="1.1"/>
+
+    <!-- лавровый венок -->
+    <g fill="#97783C">
+      <path d="M 112 156 C 136 128 172 114 208 124" fill="none" stroke="#97783C" stroke-width="1.8"/>
+      <g transform="translate(118 146) rotate(-40)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+      <g transform="translate(130 132) rotate(-52)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+      <g transform="translate(144 122) rotate(-64)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+      <g transform="translate(159 116) rotate(-76)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+      <g transform="translate(175 113) rotate(-88)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+      <g transform="translate(191 115) rotate(-98)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+      <g transform="translate(124 158) rotate(40)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+      <g transform="translate(137 145) rotate(28)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+      <g transform="translate(151 135) rotate(16)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+      <g transform="translate(166 129) rotate(4)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+      <g transform="translate(182 127) rotate(-8)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+      <g transform="translate(198 129) rotate(-22)"><use href="#leaf" xlink:href="#leaf" x="-6" y="-14" width="12" height="28"/></g>
+    </g>
+  </g>
+</svg>

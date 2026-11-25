@@ -41,6 +41,8 @@ const ld = Array.isArray(jsonld) ? jsonld : jsonld ? [jsonld] : [];
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Unbounded:wght@500;700;800&display=swap" rel="stylesheet" />
     {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
+    <!-- Счётчик Cloudflare Web Analytics, скрипт на своём домене (не режется блокировщиками и в РФ) -->
+    <script is:inline defer src="/js/pa.js" data-cf-beacon='{"token": "68cfeb3fad7a476ebed60a0528e75887", "send": {"to": "/cdn-cgi/rum"}, "spa": 2}'></script>
   </head>
   <body>
     {hero && (

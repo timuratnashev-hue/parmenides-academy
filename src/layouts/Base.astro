@@ -80,6 +80,8 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    <!-- Счётчик Cloudflare Web Analytics, скрипт на своём домене (не режется блокировщиками и в РФ) -->
+    <script is:inline defer src="/js/pa.js" data-cf-beacon='{"token": "68cfeb3fad7a476ebed60a0528e75887", "send": {"to": "/cdn-cgi/rum"}, "spa": 2}'></script>
   </head>
   <body>
     <header class="site-head">
